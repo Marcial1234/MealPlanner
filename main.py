@@ -9,20 +9,14 @@ from webapp2_extras import auth
 
 from models import User, Lab
 
-import urllib, hashlib
-import webapp2
-import logging
-import jinja2
-import time
-import json
-import yaml
-import os
+import urllib, hashlib, webapp2, logging, jinja2, time, json, yaml, os
 
 with open('conf') as config_file:
 	config =  yaml.safe_load(config_file.read())
 
 jinja_environment = jinja2.Environment(loader=
 		jinja2.FileSystemLoader(os.path.dirname(__file__)))
+
 
 # Start Authentication
 
@@ -168,7 +162,7 @@ class SignupHandler(BaseHandler):
 
 class ForgotPasswordHandler(BaseHandler):
 	def get(self):
-		self._serve_page()
+		self.serve_page()
 
 	def post(self):
 		email = self.request.get('email')
@@ -176,7 +170,7 @@ class ForgotPasswordHandler(BaseHandler):
 		user = self.user_model.get_by_auth_id(email)
 		if not user:
 			logging.info('Could not find any user entry for email %s', email)
-			self._serve_page(not_found=True)
+			self.serve_page(not_found=True)
 			return
 
 		user_id = user.get_id()
@@ -186,10 +180,10 @@ class ForgotPasswordHandler(BaseHandler):
 			signup_token=token, _full=True)
 
 		msg = 'Reset your password by visiting <a href="{url}">{url}</a>'
-		self.send_mail( msg.format(url=verification_url), 'Password Reset', email)
+		self.send_mail(msg.format(url=verification_url), 'Password Reset', email)
 		self.redirect(self.uri_for('home'))
 	
-	def _serve_page(self, not_found=False):
+	def serve_page(self, not_found=False):
 		email = self.request.get('email')
 		params = {
 			'email': email,
@@ -264,7 +258,7 @@ class LoginHandler(BaseHandler):
 		if self.user:
 			self.redirect(self.user.profile_link())
 		else:
-			self._serve_page()
+			self.serve_page()
 
 	def post(self):
 		email = self.request.get('email')
@@ -275,9 +269,9 @@ class LoginHandler(BaseHandler):
 			self.redirect(self.uri_for('home'))
 		except (InvalidAuthIdError, InvalidPasswordError) as e:
 			logging.info('Login failed for user %s because of %s', email, type(e))
-			self._serve_page(True)
+			self.serve_page(True)
 
-	def _serve_page(self, failed=False):
+	def serve_page(self, failed=False):
 		email = self.request.get('email')
 		params = {
 			'email': email,
@@ -386,24 +380,26 @@ class DeleteLabHandler(webapp2.RequestHandler):
 # 		}
 # 		self.render_template('youtube', params)
 
+route = webapp2.Route
+
 routes = [
-		webapp2.Route('/', MainHandler, name='home'),
-		webapp2.Route('/signup', SignupHandler),
-		webapp2.Route('/<type:v|p>/<user_id:\d+>-<signup_token:.+>',
+		route('/', MainHandler, name='home'),
+		route('/signup', SignupHandler),
+		route('/<type:v|p>/<user_id:\d+>-<signup_token:.+>',
 			handler=VerificationHandler, name='verification'),
-		webapp2.Route('/<type:l>/<lab_id:\d+>',
+		route('/<type:l>/<lab_id:\d+>',
 			handler=LabHandler, name='lab'),
-		webapp2.Route('/new_lab',
+		route('/new_lab',
 			handler=NewLabHandler, name='newlab'),
-		webapp2.Route('/<type:u>/<name:.+>.<last_name:.+>/<user_id:\d+>',
+		route('/<type:u>/<name:.+>.<last_name:.+>/<user_id:\d+>',
 			handler=ProfileHandler, name='profile'),
-		webapp2.Route('/delete_lab', DeleteLabHandler),
-		webapp2.Route('/password', SetPasswordHandler),
-		webapp2.Route('/login', LoginHandler, name='login'),
-		webapp2.Route('/logout', LogoutHandler, name='logout'),
-		webapp2.Route('/forgot', ForgotPasswordHandler, name='forgot'),
-		# webapp2.Route('/youtube', YoutubeHandler, name='youtube'),
-		webapp2.Route("/profile", MainHandler),
+		route('/delete_lab', DeleteLabHandler),
+		route('/password', SetPasswordHandler),
+		route('/login', LoginHandler, name='login'),
+		route('/logout', LogoutHandler, name='logout'),
+		route('/forgot', ForgotPasswordHandler, name='forgot'),
+		# route('/youtube', YoutubeHandler, name='youtube'),
+		route("/profile", MainHandler),
 		("/.*", NotFoundHandler),
 ]
 

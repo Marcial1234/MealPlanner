@@ -7,6 +7,13 @@ from google.appengine.ext import ndb
 from webapp2_extras import security
 
 class User(webapp2_extras.appengine.auth.models.User):
+  mealPlans = []
+  dietType = ndb.StringProperty(required=True)
+  weightInLb = ndb.FloatProperty(required=True)
+  proteinRatio = ndb.FloatProperty(required=True)
+  carbRatio = ndb.FloatProperty(required=True)
+  fatRatio = ndb.FloatProperty(required=True)
+
   def set_password(self, raw_password):
     """Sets the password for the current user
 
@@ -69,7 +76,7 @@ class Lab(ndb.Model):
 
 
 class MealPlan(ndb.Model):
-    mealPlans = set([])
+    meals = []
     title = ndb.StringProperty(required=True)
     calories = ndb.FloatProperty(required=True)
     protein = ndb.FloatProperty(required=True)
@@ -78,7 +85,7 @@ class MealPlan(ndb.Model):
 
 
 class Meal(ndb.Model):
-    foods = set([])
+    foods = []
     title = ndb.StringProperty(required=True)
     calories = ndb.FloatProperty(required=True)
     protein = ndb.FloatProperty(required=True)

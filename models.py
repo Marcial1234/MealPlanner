@@ -78,6 +78,7 @@ class Lab(ndb.Model):
 # based on your weight, and diet type
 
 class MealPlan(ndb.Model):
+    mealPlan = ReferenceProperty(User, collection_name='meal_plans')
     meals = ndb.StringProperty(repeated=True)
     title = ndb.StringProperty(required=True)
     calories = ndb.FloatProperty(required=True)
@@ -88,8 +89,8 @@ class MealPlan(ndb.Model):
     carbsTarget = ndb.FloatProperty(required=True)
     fatTarget = ndb.FloatProperty(required=True)
 
-
 class Meal(ndb.Model):
+    mealPlan = ReferenceProperty(MealPlan, collection_name='meals')
     foods = ndb.StringProperty(repeated=True)
     title = ndb.StringProperty(required=True)
     calories = ndb.FloatProperty(required=True)
@@ -99,7 +100,7 @@ class Meal(ndb.Model):
 
 
 class Food(ndb.Model):
-    # figure out 
+    meal = ndb.ReferenceProperty(Meal, collection_name='foods')
     title = ndb.StringProperty(required=True, repeated=False)
     calories = ndb.FloatProperty(required=True)
     protein = ndb.FloatProperty(required=True)

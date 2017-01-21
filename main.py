@@ -416,16 +416,16 @@ class NewMealHandler(BaseHandler):
 	def get(self):
 		# need to get all to get the dropdown to select all
 		foods = Food.query()
-
 		calories = sum(foods.calories)
 		protein = sum(foods.protein)
 		carbs = sum(foods.carbs)
 		fat = sum(foods.fat)
-
+		
 		meal = Meal(name=name, calories=calories, 
 			protien=protein, carbs=carbs, fat=fat)
 		meal.put()
 
+# CREATION ONLY
 class NewFoodHandler(BaseHandler):
 	def get(self):
 		params = { 'dashboard': False }

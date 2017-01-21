@@ -19,12 +19,47 @@
 		</h2>
 		<br/>
 		<br/>
+		<!-- new meal PLANS button! -->
+		<div class="col-md-12">
+			<div id="newMealPlan" class="col-md-10 panel-collapse collapse">
+				<form class="col-md-2" action="/new_mealplan" method="post" class="pull-right">
+					<input name="name" placeholder="Meal Name" required>
+					<input type="hidden" name="user" value={{local_user.key.id()}}>
+					<button class="col-md-2" type="submit">OK</button>
+				</form>
+			</div>
+			<!-- CHANGE THIS SHIT TO HIDDEN RATHER THAN COLLAPSE -->
+			<button class="col-md-2 btn btn-default" title="oink" data-toggle="collapse" data-target="#newMealPlan">
+			Create New Meal</button>
+			<div style="clear:both;"></div>
+		</div>
+
+		{% if mealplans %}
+		{% for plans in mealplans %}
 		<!-- new meal button! -->
+		<div class="col-md-12">
+			<div id="newMeal+{{plans.key.id()}}" class="col-md-10 panel-collapse collapse">
+				<form class="col-md-2" action="/new_meal" method="post" class="pull-right">
+					<input name="name" placeholder="Meal Name" required>
+					<button class="col-md-2" type="submit">OK</button>
+				</form>
+			</div>
+			<!-- CHANGE THIS SHIT TO HIDDEN RATHER THAN COLLAPSE -->
+			<button class="col-md-2 btn btn-default" title="oink" data-toggle="collapse" data-target="#newMeal+{{plans.id}}">
+			Create New Meal</button>
+			<div style="clear:both;"></div>
+		</div>
 		{% if meals %}
 		{% for meal in meals %}
-			<!-- have a  -->
+			<!-- put everything in a table, once you get it from the back-end -->
+			<form action="/delete_meal" method="post" class="pull-right">
+				<input type="hidden" name="id" value="{{meal.key.id()}}">
+				<button type="submit" class="close"><span>&times;</span></button>
+			</form>
 			<!-- have this hidden unless a '+' is clicked -->
 			{% block foodform %}{% endblock %}
+		{% endfor %}
+		{% endif %}
 		{% endfor %}
 		{% endif %}
 	</div>

@@ -8,3 +8,8 @@ NEED:
 
 		Calculate target based on weight*ratio = corresponding OZ
 		*HAVE LINK TO WEIGHT CONVERTER (kg/lbs, oz/g, ETC)
+
+ 1-test nested data base 
+     - foods inside a meal
+     - adding second meal 
+     - having diff foods in every meal

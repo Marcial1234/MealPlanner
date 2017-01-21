@@ -1,0 +1,10 @@
+
+NEED:
+	Preferences => should be the same page after loggin if not found already.
+		must have: 
+			weight (in lbs)
+			protein, carbs, fat ratio (floats)
+			type (optional)
+
+		Calculate target based on weight*ratio = corresponding OZ
+		*HAVE LINK TO WEIGHT CONVERTER (kg/lbs, oz/g, ETC)

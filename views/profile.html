@@ -19,36 +19,44 @@
 		</h2>
 		<br/>
 		<br/>
-		<div class="box form-control text-center right-indent-lg">
-			<h3>New Food</h3>
-			<form action="/new_food" method="post" data-parsley-validate>
+		<div class="right-indent-lg">
+			<div class="row">
+				<h3 class="col-md-12">New Food</h3>
+			</div>
+			<form class="row" action="/new_food" method="post" data-parsley-validate>
 				<div class="form-group">
 					<br />
-					<div class="col-sm-2">
+					<div class="col-md-2">
 						<input name="title" placeholder="Chicken" required class="form-control" type="text">
 					</div>
-					<div class="col-sm-2">
+					<div class="col-md-2">
 						<input name="amount" placeholder="3 (oz)" required class="form-control" data-parsley-type="number" min="0" step="any">
 					</div>
-					<div class="col-sm-2">
+					<div class="col-md-2">
 						<input name="calories" placeholder="Calories" required class="form-control" data-parsley-type="number" min="0" step="any">
 					</div>
-					<div class="col-sm-2">
+					<div class="col-md-2">
 						<input name="protein" placeholder="Protein" required class="form-control" data-parsley-type="number" min="0" step="any">
 					</div>
-					<div class="col-sm-2">
+					<div class="col-md-2">
 						<input name="carbs" placeholder="Carbs" required class="form-control" data-parsley-type="number" min="0" step="any">
 					</div>
-					<div class="col-sm-2">
+					<div class="col-md-2">
 						<input name="fat" placeholder="Fat" required class="form-control" data-parsley-type="number" min="0" step="any">
 					</div>
 					<br />
-					<br />
 				</div>
-				<button class="btn btn-success" type="submit">Create New</button>
+				<div class="pull-right">
+					<div class="col-md-12">
+						<button class="btn btn-success" type="submit">Create New</button>
+					</div>
+				</div>
 			</form>
 		</div>
 		<div style="clear:both;"></div>
+
+
+		
 		<!-- OLD CODE BELOW -->
 <!-- 		<div class="box form-control pull-left left-indent-lg rigid">
 			<h3 class="text-center">Open Lab Sessions</h3>

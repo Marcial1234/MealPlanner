@@ -396,6 +396,8 @@ class NewMealHandler(BaseHandler):
 	
 	def get(self):
 		foods = Food.query()
+
+		# need to figure out an unique key
 		calories = sum(foods.calories)
 		protein = sum(foods.protein)
 		carbs = sum(foods.carbs)
@@ -406,16 +408,21 @@ class NewMealHandler(BaseHandler):
 		meal.put()
 
 class NewFoodHandler(BaseHandler):
+	def get(self):
+		self.render_template('new_food')
+
 	def post(self):
 		title = str(self.request.get('title'))
 		amount = float(self.request.get('amount'))
-		calories = float(self.request.get('calories'))
-		protein = float(self.request.get('protein'))
-		carbs = float(self.request.get('carbs'))
-		fat = float(self.request.get('fat'))
-		# logging.info(title + amount + calories + protein + carbs + fat)
 
-		food = Food(title=title, amount=amount, calories=calories, 
+		# all food content will be based on 1 OZ of weight
+		scalar = 1/amount
+		calories = float(self.request.get('calories'))*scalar
+		protein = float(self.request.get('protein'))*scalar
+		carbs = float(self.request.get('carbs'))*scalar
+		fat = float(self.request.get('fat'))*scalar
+
+		food = Food(title=title, calories=calories, 
 			protein=protein, carbs=carbs, fat=fat)
 		food.put()
 
@@ -441,7 +448,6 @@ routes = [
 		route('/login', LoginHandler, name='login'),
 		route('/logout', LogoutHandler, name='logout'),
 		route('/forgot', ForgotPasswordHandler, name='forgot'),
-		# route('/youtube', YoutubeHandler, name='youtube'),
 		route("/profile", MainHandler),
 		("/.*", NotFoundHandler),
 ]

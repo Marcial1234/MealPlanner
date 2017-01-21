@@ -3,17 +3,13 @@ import webapp2_extras.appengine.auth.models
 import urllib, hashlib
 
 from google.appengine.ext import ndb
-
 from webapp2_extras import security
+
 
 class User(webapp2_extras.appengine.auth.models.User):
   def set_password(self, raw_password):
-    """Sets the password for the current user
-
-    :param raw_password:
-        The raw password which will be hashed and stored
-    """
     self.password = security.generate_password_hash(raw_password, length=12)
+
   def profile_link(self):
     return "/u/{0}.{1}/{2}".format(self.name, self.last_name, self.key.id())
 
@@ -25,7 +21,8 @@ class User(webapp2_extras.appengine.auth.models.User):
 
   @classmethod
   def get_by_auth_token(cls, user_id, token, subject='auth'):
-    """Returns a user object based on a user ID and token.
+    """
+    Returns a user object based on a user ID and token.
 
     :param user_id:
         The user_id of the requesting user.
@@ -37,6 +34,7 @@ class User(webapp2_extras.appengine.auth.models.User):
     """
     token_key = cls.token_model.get_key(user_id, subject, token)
     user_key = ndb.Key(cls, user_id)
+
     # Use get_multi() to save a RPC call.
     valid_token, user = ndb.get_multi([token_key, user_key])
     if valid_token and user:
@@ -68,6 +66,9 @@ class Lab(ndb.Model):
     return users
 
 
+# type of diet formulae!
+# based on your weight, and diet type
+
 class MealPlan(ndb.Model):
     mealPlans = set([])
     title = ndb.StringProperty(required=True)
@@ -87,8 +88,7 @@ class Meal(ndb.Model):
 
 
 class Food(ndb.Model):
-    title = ndb.StringProperty(required=True)
-    amount = ndb.FloatProperty(required=True)
+    title = ndb.StringProperty(required=True, repeated=False) # figure out 
     calories = ndb.FloatProperty(required=True)
     protein = ndb.FloatProperty(required=True)
     carbs = ndb.FloatProperty(required=True)

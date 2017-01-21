@@ -1,0 +1,95 @@
+{% if splash %}
+	{% extends "views/home.html" %}
+{% else %}
+	{% extends "layouts/main.html" %}
+	{% block title %}Create an Account{% endblock %}
+{% endif %}
+{% block maincontent %}
+	<style type="text/css">
+		#text { vertical-align: top; }
+		.forgot { color:white; }
+		.rigid { width: 350px; }
+		.left-indent { margin-left: 25px; }
+		.right-indent { margin-right: 25px; }
+		.dotted { border: 2px dashed darkgrey; }
+		.forgot:hover { color:white; text-decoration:none; }
+		.error 
+		{ 
+			color: #B94A48;
+			background-color: #F2DEDE;
+			border: 1px solid #EED3D7;
+			border-radius: 5px;
+		}	
+	</style>
+	{% if splash %}
+		<h1 id="h1">Let's get going!</h1>
+	{% endif %}
+	<table id="table">
+		<tr id="text">
+		<td>
+			<div class="container rigid right-indent">
+				<h1 class="text-center">Sign up:</h1>
+				<br>
+				<form action="/signup" method="post" class="form-horizontal" role="form" data-parsley-validate>
+					<div class="form-group">
+						<div class="col-md-6">
+							<input name="name" placeholder="First Name" required class="form-control" type="text">
+						</div>
+						<div class="col-md-6">
+							<input name="lastname" placeholder="Last Name" required class="form-control" type="text">
+						</div>
+					</div>
+					<input name="email" placeholder="Email" required class="form-control" type="email">
+					<br />
+					<input name="password" placeholder="Password" required class="form-control" type="password">
+					<br />
+					<div class="text-center">
+						<button class="btn btn-success" type="submit">Sign up</button>
+					</div>
+					<input type="hidden" name="new" value="true">
+				</form>
+			</div>
+		</td>
+		<td class="dotted"></td>
+		<td>
+			<div class="container rigid left-indent">
+				<h1 class="text-center">Login:</h1>
+				{% if failed %}
+					<div class="text-center error"><strong>Login failed!</strong> Please try again.</div>
+				{% endif %}
+				<br>
+				<form action= "/login" method="post" data-parsley-validate>
+					<input name="email" placeholder="Email" value="{{email}}" required class="form-control" type="email">
+					<br />
+					<input  name="password" placeholder="Password" required class="form-control" type="password">
+					<br />
+					<div class="text-center">
+						<button class="btn btn-success" type="submit">Login</button>
+						<div class="btn btn-warning"><a href="/forgot" class="forgot">Forgot password</a></div>
+					</div>
+				</form>
+			</div>
+		</td>
+		</tr>
+	</table>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			var halfHeight = (($(window).height() / 2) - ($("#table").height()/ 
+			{% if splash %}
+				1 - $("h1").height()));
+			{% else %}
+				2));
+			{% endif %}
+			
+			var halfWidth = (($(window).width() / 2) - ($("#table").width()/ 2));
+
+			var style = document.createElement("style");
+			style.type = "text/css";
+			style.innerHTML = ".centered { margin-left: " + halfWidth + "px; margin-top: " + halfHeight + "px }";
+			document.getElementsByTagName("head")[0].appendChild(style);
+
+			document.getElementById("table").className = "centered";
+		});
+	</script>
+{% endblock %}

@@ -1,0 +1,40 @@
+<html>
+	<head>
+		<title>{% block title %}CoLabs{% endblock %}</title>
+	    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+	    <script src="https://code.jquery.com/jquery-git1.min.js"></script>
+	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css">		
+		<link rel="stylesheet" type="text/css" href="/s/parsley.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.0.2/parsley.js"></script>
+		<style type="text/css">
+			body { margin-top: 52px; }
+			.circle 
+			{ 
+				border-radius: 200px 200px 200px 200px;
+				-moz-border-radius: 200px 200px 200px 200px;
+				-webkit-border-radius: 200px 200px 200px 200px;
+			}
+			.gravatar { width: 50px; height: 50px; }
+		</style>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top borderless" role="navigation">
+			<div class="container">
+				<a class="navbar-brand" href="/">CoLabs</a>
+				<div class="navbar-form navbar-right">
+					<a href="https://docs.google.com/forms/d/1HAXcTNCJ9Asm76Hcj8EpsM1MwBUKSK2eGjOP9mXX9gM/viewform?usp=send_form"><button class="btn btn-primary">Feedback</button></a>
+					{% if not user %}
+						<a href="/login"><button class="btn btn-primary">Login</button></a>
+					{% else %}
+						<a href="{{ user.profile_link() }}"><button class="btn btn-default"><i class="fa fa-home"></i> Profile</button></a>
+						<a href="/logout"><button class="btn btn-danger">Logout</button></a> 
+					{% endif %}
+				</div>
+			</div>
+		</nav>
+		<div class="content">
+			{% block maincontent %}{% endblock %}
+		</div>
+	</body>
+</html>

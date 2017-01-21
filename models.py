@@ -6,8 +6,6 @@ from google.appengine.ext import ndb
 
 from webapp2_extras import security
 
-class 
-
 class User(webapp2_extras.appengine.auth.models.User):
   def set_password(self, raw_password):
     """Sets the password for the current user
@@ -69,23 +67,26 @@ class Lab(ndb.Model):
         users.append('{0}'.format(collaborator))
     return users
 
-class MealPlan(ndm.Model):
-    mealPlans = []
+
+class MealPlan(ndb.Model):
+    mealPlans = set([])
     title = ndb.StringProperty(required=True)
     calories = ndb.FloatProperty(required=True)
     protein = ndb.FloatProperty(required=True)
     carbs = ndb.FloatProperty(required=True)
     fat = ndb.FloatProperty(required=True)
 
-class Meal(ndm.Model):
-    foods = []
+
+class Meal(ndb.Model):
+    foods = set([])
     title = ndb.StringProperty(required=True)
     calories = ndb.FloatProperty(required=True)
     protein = ndb.FloatProperty(required=True)
     carbs = ndb.FloatProperty(required=True)
     fat = ndb.FloatProperty(required=True)
 
-class Food(ndm.Model):
+
+class Food(ndb.Model):
     title = ndb.StringProperty(required=True)
     calories = ndb.FloatProperty(required=True)
     protein = ndb.FloatProperty(required=True)

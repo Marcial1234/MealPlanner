@@ -7,8 +7,8 @@ from google.appengine.ext import ndb
 from webapp2_extras import security
 
 class User(webapp2_extras.appengine.auth.models.User):
-  mealPlans = []
-  dietType = ndb.StringProperty(required=True)
+  mealPlans = ndb.StringProperty(repeated=True)
+  dietType = ndb.StringProperty(required=False)
   weightInLb = ndb.FloatProperty(required=True)
   proteinRatio = ndb.FloatProperty(required=True)
   carbRatio = ndb.FloatProperty(required=True)
@@ -76,16 +76,19 @@ class Lab(ndb.Model):
 
 
 class MealPlan(ndb.Model):
-    meals = []
+    meals = ndb.StringProperty(repeated=True)
     title = ndb.StringProperty(required=True)
     calories = ndb.FloatProperty(required=True)
     protein = ndb.FloatProperty(required=True)
     carbs = ndb.FloatProperty(required=True)
     fat = ndb.FloatProperty(required=True)
+    proteinTarget = ndb.FloatProperty(required=True)
+    carbsTarget = ndb.FloatProperty(required=True)
+    fatTarget = ndb.FloatProperty(required=True)
 
 
 class Meal(ndb.Model):
-    foods = []
+    foods = ndb.StringProperty(repeated=True)
     title = ndb.StringProperty(required=True)
     calories = ndb.FloatProperty(required=True)
     protein = ndb.FloatProperty(required=True)

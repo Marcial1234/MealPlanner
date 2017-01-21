@@ -372,6 +372,16 @@ class DeleteLabHandler(webapp2.RequestHandler):
 
 # End labs
 
+class UserPreferenceHandler(BaseHandler):
+	def post(self):
+		dietType = str(self.request.get('dietType'))
+		weigthInLb = float(self.request.get('weightInLb'))
+		proteinRatio = float(self.request.get('proteinRatio'))
+		carbRatio = float(self.request.get('carbRatio'))
+		fatRatio = float(self.request.get('fatRation'))
+	
+
+
 # FIGURE OUT GET/POST DIFFERENCE
 # TO PUT EACH ON A DIFFERENT PAGE, OR NOT. MAYBE, MAYBE NOT.
 class NewMealPlanHandler(BaseHandler):
@@ -385,9 +395,12 @@ class NewMealPlanHandler(BaseHandler):
 		protein = sum(meals.protein)
 		carbs = sum(meals.carbs)
 		fat = sum(meals.fat)
-
+		proteinTarget = user.weightInLb * proteinRatio
+		carbsTarget = user.weightInLb * carbRatio
+		fatTarget = user.weightInLb * fatRatio
 		mealPlan = MealPlan(title=title, calories=calories, 
-			protien=protein, carbs=carbs, fat=fat)
+			protien=protein, carbs=carbs, fat=fat, proteinTarget='proteinTarget', 
+			carbsTarget='carbsTarget', fatTarget='fatTarget')
 		mealPlan.put()
 
 class NewMealHandler(BaseHandler):

@@ -7,6 +7,13 @@ from webapp2_extras import security
 
 
 class User(webapp2_extras.appengine.auth.models.User):
+  mealPlans = []
+  dietType = ndb.StringProperty(required=True)
+  weightInLb = ndb.FloatProperty(required=True)
+  proteinRatio = ndb.FloatProperty(required=True)
+  carbRatio = ndb.FloatProperty(required=True)
+  fatRatio = ndb.FloatProperty(required=True)
+
   def set_password(self, raw_password):
     self.password = security.generate_password_hash(raw_password, length=12)
 
@@ -70,7 +77,7 @@ class Lab(ndb.Model):
 # based on your weight, and diet type
 
 class MealPlan(ndb.Model):
-    mealPlans = set([])
+    meals = []
     title = ndb.StringProperty(required=True)
     calories = ndb.FloatProperty(required=True)
     protein = ndb.FloatProperty(required=True)
@@ -79,7 +86,7 @@ class MealPlan(ndb.Model):
 
 
 class Meal(ndb.Model):
-    foods = set([])
+    foods = []
     title = ndb.StringProperty(required=True)
     calories = ndb.FloatProperty(required=True)
     protein = ndb.FloatProperty(required=True)

@@ -6,6 +6,8 @@ from google.appengine.ext import ndb
 
 from webapp2_extras import security
 
+class 
+
 class User(webapp2_extras.appengine.auth.models.User):
   def set_password(self, raw_password):
     """Sets the password for the current user
@@ -50,6 +52,7 @@ class Lab(ndb.Model):
   collaborators = ndb.StringProperty(repeated=True)
   owner = ndb.StringProperty(required=True)
   private = ndb.BooleanProperty()
+  
   def destroy_url(self):
     return '/l/delete?id=%s' % self.key.id()
   
@@ -65,3 +68,27 @@ class Lab(ndb.Model):
       else:
         users.append('{0}'.format(collaborator))
     return users
+
+class MealPlan(ndm.Model):
+    mealPlans = []
+    title = ndb.StringProperty(required=True)
+    calories = ndb.FloatProperty(required=True)
+    protein = ndb.FloatProperty(required=True)
+    carbs = ndb.FloatProperty(required=True)
+    fat = ndb.FloatProperty(required=True)
+
+class Meal(ndm.Model):
+    foods = []
+    title = ndb.StringProperty(required=True)
+    calories = ndb.FloatProperty(required=True)
+    protein = ndb.FloatProperty(required=True)
+    carbs = ndb.FloatProperty(required=True)
+    fat = ndb.FloatProperty(required=True)
+
+class Food(ndm.Model):
+    title = ndb.StringProperty(required=True)
+    calories = ndb.FloatProperty(required=True)
+    protein = ndb.FloatProperty(required=True)
+    carbs = ndb.FloatProperty(required=True)
+    fat = ndb.FloatProperty(required=True)
+

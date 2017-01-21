@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>{% block title %}CoLabs{% endblock %}</title>
+		<title>{% block title %}Meal Planner{% endblock %}</title>
 	    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
 	    <script src="https://code.jquery.com/jquery-git1.min.js"></script>
 	    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
@@ -21,12 +21,13 @@
 	<body>
 		<nav class="navbar navbar-default navbar-fixed-top borderless" role="navigation">
 			<div class="container">
-				<a class="navbar-brand" href="/">CoLabs</a>
+				<a class="navbar-brand" href="/">Meal Planner</a>
 				<div class="navbar-form navbar-right">
 					<a href="https://docs.google.com/forms/d/1HAXcTNCJ9Asm76Hcj8EpsM1MwBUKSK2eGjOP9mXX9gM/viewform?usp=send_form"><button class="btn btn-primary">Feedback</button></a>
 					{% if not user %}
 						<a href="/login"><button class="btn btn-primary">Login</button></a>
 					{% else %}
+						<!-- CHANGE THIS ICONS LATER -->
 						<a href="{{ user.profile_link() }}"><button class="btn btn-default"><i class="fa fa-home"></i> Profile</button></a>
 						<a href="/logout"><button class="btn btn-danger">Logout</button></a> 
 					{% endif %}

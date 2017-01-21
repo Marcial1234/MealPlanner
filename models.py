@@ -1,6 +1,5 @@
-import time
+import time, urllib, hashlib
 import webapp2_extras.appengine.auth.models
-import urllib, hashlib
 
 from google.appengine.ext import ndb
 from webapp2_extras import security
@@ -9,11 +8,13 @@ from webapp2_extras import security
 class User(webapp2_extras.appengine.auth.models.User):
   mealPlans = ndb.StringProperty(repeated=True)
   dietType = ndb.StringProperty(required=False)
-  weightInLb = ndb.FloatProperty(required=True)
-  proteinRatio = ndb.FloatProperty(required=True)
-  carbRatio = ndb.FloatProperty(required=True)
-  fatRatio = ndb.FloatProperty(required=True)
+  # Error is made as required, for now
+  weightInLb = ndb.FloatProperty()
+  proteinRatio = ndb.FloatProperty()
+  carbRatio = ndb.FloatProperty()
+  fatRatio = ndb.FloatProperty()
 
+  # SHA1 encryption
   def set_password(self, raw_password):
     self.password = security.generate_password_hash(raw_password, length=12)
 
@@ -98,7 +99,8 @@ class Meal(ndb.Model):
 
 
 class Food(ndb.Model):
-    title = ndb.StringProperty(required=True, repeated=False) # figure out 
+    # figure out 
+    title = ndb.StringProperty(required=True, repeated=False)
     calories = ndb.FloatProperty(required=True)
     protein = ndb.FloatProperty(required=True)
     carbs = ndb.FloatProperty(required=True)

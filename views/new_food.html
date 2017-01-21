@@ -13,42 +13,9 @@
 	</style>
 
 	<div class="container">
-		<h2 class="text-right">
-			<span title="Your Gravatar" class="tooltips"><img class="circle gravatar" src="{{local_user.gravatarize()}}"></span>
-			{{local_user.name}} {{local_user.last_name}}
-		</h2>
-		<br/>
-		<br/>
-		<div class="form-control text-center right-indent-lg">
-			<h3>New Food</h3>
-			<form action="/new_food" method="post" data-parsley-validate>
-				<div class="form-group">
-					<br />
-					<div class="col-sm-2">
-						<input name="title" placeholder="Chicken" required class="form-control" type="text">
-					</div>
-					<div class="col-sm-2">
-						<input name="amount" placeholder="3 (oz)" required class="form-control" data-parsley-type="number" min="0" step="any">
-					</div>
-					<div class="col-sm-2">
-						<input name="calories" placeholder="Calories" required class="form-control" data-parsley-type="number" min="0" step="any">
-					</div>
-					<div class="col-sm-2">
-						<input name="protein" placeholder="Protein" required class="form-control" data-parsley-type="number" min="0" step="any">
-					</div>
-					<div class="col-sm-2">
-						<input name="carbs" placeholder="Carbs" required class="form-control" data-parsley-type="number" min="0" step="any">
-					</div>
-					<div class="col-sm-2">
-						<input name="fat" placeholder="Fat" required class="form-control" data-parsley-type="number" min="0" step="any">
-					</div>
-					<br />
-					<br />
-				</div>
-				<button class="btn btn-success" type="submit">Create New</button>
-			</form>
-		</div>
-		<div style="clear:both;"></div>
+		<br />
+		<br />
+		{% block foodform %}{% endblock %}
 	</div>
 
 	<script type="text/javascript">

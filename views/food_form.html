@@ -1,0 +1,37 @@
+{% if dashboard %}
+	{% extends "views/profile.html" %}
+{% else %}
+	{% extends "views/new_food.html" %}
+{% endif %}
+
+{% block foodform %}
+	<div>
+		<h3>New Food</h3>
+		<form action="/new_food" method="post" data-parsley-validate>
+			<div class="form-group">
+				<br />
+				<div class="col-sm-2">
+					<input name="title" placeholder="Chicken" required class="form-control" type="text">
+				</div>
+				<div class="col-sm-2">
+					<input name="amount" placeholder="3 (oz)" required class="form-control" data-parsley-type="number" min="0" step="any">
+				</div>
+				<div class="col-sm-2">
+					<input name="calories" placeholder="Calories" required class="form-control" data-parsley-type="number" min="0" step="any">
+				</div>
+				<div class="col-sm-2">
+					<input name="protein" placeholder="Protein" required class="form-control" data-parsley-type="number" min="0" step="any">
+				</div>
+				<div class="col-sm-2">
+					<input name="carbs" placeholder="Carbs" required class="form-control" data-parsley-type="number" min="0" step="any">
+				</div>
+				<div class="col-sm-2">
+					<input name="fat" placeholder="Fat" required class="form-control" data-parsley-type="number" min="0" step="any">
+				</div>
+				<br />
+			</div>
+			<button class="btn btn-success pull-right" type="submit">Create New</button>
+		</form>
+	</div>
+	<div style="clear:both;"></div>
+{% endblock %}

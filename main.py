@@ -1,11 +1,8 @@
-from webapp2_extras.auth import InvalidPasswordError
-from webapp2_extras.auth import InvalidAuthIdError
+from webapp2_extras import sessions, auth
+from webapp2_extras.auth import InvalidPasswordError, InvalidAuthIdError
 
 from google.appengine.ext import ndb
 from google.appengine.api import mail
-
-from webapp2_extras import sessions
-from webapp2_extras import auth
 
 from models import User, Lab, MealPlan, Meal, Food
 
@@ -14,11 +11,10 @@ import urllib, hashlib, webapp2, logging, jinja2, time, json, yaml, os
 with open('conf') as config_file:
 	config =  yaml.safe_load(config_file.read())
 
+route = webapp2.Route
 jinja_environment = jinja2.Environment(loader=
 		jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
-
-# Start Authentication
 
 def user_required(handler):
 	"""
@@ -288,6 +284,8 @@ class LogoutHandler(BaseHandler):
 
 class ProfileHandler(BaseHandler):
 	@user_required
+	# i need to get these every time i wanna access a users stuff
+	# or just send via magic! keep reading~
 	def get(self, *args, **kwargs):
 		user_id = int(kwargs['user_id'])
 		name = kwargs['name'].lower()
@@ -305,11 +303,12 @@ class ProfileHandler(BaseHandler):
 					labs = query.filter(Lab.collaborators.IN([local_user.email_address, user.email_address]) and Lab.private == False).fetch()
 				params = {
 				'labs': labs,
-				'local_user': local_user
+				'local_user': local_user,
+				'dashboard': True
 				}
-				self.render_template('profile', params)
+				self.render_template('food_form', params)
 			else:
-				self.display_message('The user who\'s profile you attempted to view does not exist. <a href="/u/{0}.{1}/{2}">Go your profile.</a>'.format(user.name, user.last_name, user.key.id()))
+				self.display_message('The user who\'s profile you attempted to view does not exist. <a href="/u/{0}.{1}/{2}">Go to your profile.</a>'.format(user.name, user.last_name, user.key.id()))
 		else:
 			self.redirect(self.uri_for('home'))
 
@@ -373,13 +372,17 @@ class DeleteLabHandler(webapp2.RequestHandler):
 # End labs
 
 class UserPreferenceHandler(BaseHandler):
+	def get(self):
+		# use tooltip to deliniate this. cog favicon, screw it
+		# go to main to change this, it's commented there already
+		self.render_template("preferences")
+
 	def post(self):
 		dietType = str(self.request.get('dietType'))
 		weigthInLb = float(self.request.get('weightInLb'))
 		proteinRatio = float(self.request.get('proteinRatio'))
 		carbRatio = float(self.request.get('carbRatio'))
 		fatRatio = float(self.request.get('fatRation'))
-	
 
 
 # FIGURE OUT GET/POST DIFFERENCE
@@ -395,9 +398,11 @@ class NewMealPlanHandler(BaseHandler):
 		protein = sum(meals.protein)
 		carbs = sum(meals.carbs)
 		fat = sum(meals.fat)
+
 		proteinTarget = user.weightInLb * proteinRatio
 		carbsTarget = user.weightInLb * carbRatio
 		fatTarget = user.weightInLb * fatRatio
+
 		mealPlan = MealPlan(title=title, calories=calories, 
 			protien=protein, carbs=carbs, fat=fat, proteinTarget='proteinTarget', 
 			carbsTarget='carbsTarget', fatTarget='fatTarget')
@@ -408,9 +413,9 @@ class NewMealHandler(BaseHandler):
 		title = self.request.get('title')
 	
 	def get(self):
+		# need to get all to get the dropdown to select all
 		foods = Food.query()
 
-		# need to figure out an unique key
 		calories = sum(foods.calories)
 		protein = sum(foods.protein)
 		carbs = sum(foods.carbs)
@@ -422,7 +427,8 @@ class NewMealHandler(BaseHandler):
 
 class NewFoodHandler(BaseHandler):
 	def get(self):
-		self.render_template('new_food')
+		params = { 'dashboard': False }
+		self.render_template('food_form', params)
 
 	def post(self):
 		title = str(self.request.get('title'))
@@ -443,25 +449,36 @@ class NewFoodHandler(BaseHandler):
 		self.redirect(self.uri_for('home'))
 
 
-route = webapp2.Route
 
 routes = [
+		### Do not touch below
 		route('/', MainHandler, name='home'),
 		route('/signup', SignupHandler),
 		route('/<type:v|p>/<user_id:\d+>-<signup_token:.+>',
 			handler=VerificationHandler, name='verification'),
-		route('/<type:l>/<lab_id:\d+>',
-			handler=LabHandler, name='lab'),
-		route('/new_food',
-			handler=NewFoodHandler, name='newfood'),
-		route('/<type:u>/<name:.+>.<last_name:.+>/<user_id:\d+>',
-			handler=ProfileHandler, name='profile'),
-		route('/delete_lab', DeleteLabHandler),
+		route("/profile", MainHandler),
 		route('/password', SetPasswordHandler),
 		route('/login', LoginHandler, name='login'),
 		route('/logout', LogoutHandler, name='logout'),
 		route('/forgot', ForgotPasswordHandler, name='forgot'),
-		route("/profile", MainHandler),
+		### Do not touch above
+
+		# NEEDS TO GO
+		# route('/<type:l>/<lab_id:\d+>',
+		# 	handler=LabHandler, name='lab'),
+		# route('/delete_lab', DeleteLabHandler),
+
+
+		# this stuff goes here
+		route('/new_food',
+			handler=NewFoodHandler, name='newfood'),
+
+
+		# understand this regex
+		route('/<type:u>/<name:.+>.<last_name:.+>/<user_id:\d+>',
+			handler=ProfileHandler, name='profile'),
+
+		# LEAVE THIS HERE
 		("/.*", NotFoundHandler),
 ]
 

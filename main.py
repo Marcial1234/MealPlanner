@@ -380,6 +380,53 @@ class DeleteLabHandler(webapp2.RequestHandler):
 # 		}
 # 		self.render_template('youtube', params)
 
+class NewMealPlanHandler(BaseHandler):
+	def post(self):
+		title = self.request.get('title')
+		query = Meal.query()
+		calories = sum(query.calories)
+		protein = sum(query.protein)
+		carbs = sum(query.carbs)
+		fat = sum(query.fat)
+
+		mealPlan = MealPlan(title=title, calories=calories, 
+			protien=protein, carbs=carbs, fat=fat)
+		mealPlan.put()
+
+class NewMealHandler(BaseHandler):
+	def post(self):
+		title = self.request.get('title')
+		query = Food.query()
+		calories = sum(query.calories)
+		protein = sum(query.protein)
+		carbs = sum(query.carbs)
+		fat = sum(query.fat)
+
+		# for q in query:
+		# 	calories += q.calories
+		# 	protein += q.protein
+		# 	carbs += q.carbs
+		# 	fat += q.fat
+
+		meal = Meal(title=title, calories=calories, 
+			protien=protein, carbs=carbs, fat=fat)
+		meal.put()
+
+class NewFoodHandler(BaseHandler):
+	def post(self):
+		title = self.request.get('title')
+		amount = self.request.get('amount')
+		calories = self.request.get('calories')
+		protein = self.request.get('protein')
+		carbs = self.request.get('carbs')
+		fat = self.request.get('fat')
+
+		food = Food(title=title, amount=amount, calories=calories, 
+			protien=protein, carbs=carbs, fat=fat)
+		food.put()
+
+
+
 route = webapp2.Route
 
 routes = [

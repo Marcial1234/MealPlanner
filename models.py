@@ -88,8 +88,8 @@ class Meal(ndb.Model):
 
 class Food(ndb.Model):
     title = ndb.StringProperty(required=True)
+    amount = ndb.FloatProperty(required=True)
     calories = ndb.FloatProperty(required=True)
     protein = ndb.FloatProperty(required=True)
     carbs = ndb.FloatProperty(required=True)
     fat = ndb.FloatProperty(required=True)
-

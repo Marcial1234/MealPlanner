@@ -7,7 +7,7 @@ from google.appengine.api import mail
 from webapp2_extras import sessions
 from webapp2_extras import auth
 
-from models import User, Lab
+from models import User, Lab, MealPlan, Meal, Food
 
 import urllib, hashlib, webapp2, logging, jinja2, time, json, yaml, os
 
@@ -372,22 +372,19 @@ class DeleteLabHandler(webapp2.RequestHandler):
 
 # End labs
 
-# class YoutubeHandler(BaseHandler):
-# 	@user_required
-# 	def get(self):
-# 		params = {
-# 			'api_key': config['apis']['youtube']['key']
-# 		}
-# 		self.render_template('youtube', params)
-
+# FIGURE OUT GET/POST DIFFERENCE
+# TO PUT EACH ON A DIFFERENT PAGE, OR NOT. MAYBE, MAYBE NOT.
 class NewMealPlanHandler(BaseHandler):
 	def post(self):
 		title = self.request.get('title')
-		query = Meal.query()
-		calories = sum(query.calories)
-		protein = sum(query.protein)
-		carbs = sum(query.carbs)
-		fat = sum(query.fat)
+
+	def get(self):
+		# need to get the database name first, then get the array 
+		meals = Meal.query()
+		calories = sum(meals.calories)
+		protein = sum(meals.protein)
+		carbs = sum(meals.carbs)
+		fat = sum(meals.fat)
 
 		mealPlan = MealPlan(title=title, calories=calories, 
 			protien=protein, carbs=carbs, fat=fat)
@@ -396,17 +393,13 @@ class NewMealPlanHandler(BaseHandler):
 class NewMealHandler(BaseHandler):
 	def post(self):
 		title = self.request.get('title')
-		query = Food.query()
-		calories = sum(query.calories)
-		protein = sum(query.protein)
-		carbs = sum(query.carbs)
-		fat = sum(query.fat)
-
-		# for q in query:
-		# 	calories += q.calories
-		# 	protein += q.protein
-		# 	carbs += q.carbs
-		# 	fat += q.fat
+	
+	def get(self):
+		foods = Food.query()
+		calories = sum(foods.calories)
+		protein = sum(foods.protein)
+		carbs = sum(foods.carbs)
+		fat = sum(foods.fat)
 
 		meal = Meal(title=title, calories=calories, 
 			protien=protein, carbs=carbs, fat=fat)
@@ -414,17 +407,20 @@ class NewMealHandler(BaseHandler):
 
 class NewFoodHandler(BaseHandler):
 	def post(self):
-		title = self.request.get('title')
-		amount = self.request.get('amount')
-		calories = self.request.get('calories')
-		protein = self.request.get('protein')
-		carbs = self.request.get('carbs')
-		fat = self.request.get('fat')
+		title = str(self.request.get('title'))
+		amount = float(self.request.get('amount'))
+		calories = float(self.request.get('calories'))
+		protein = float(self.request.get('protein'))
+		carbs = float(self.request.get('carbs'))
+		fat = float(self.request.get('fat'))
+		# logging.info(title + amount + calories + protein + carbs + fat)
 
 		food = Food(title=title, amount=amount, calories=calories, 
-			protien=protein, carbs=carbs, fat=fat)
+			protein=protein, carbs=carbs, fat=fat)
 		food.put()
 
+		time.sleep(0.1)
+		self.redirect(self.uri_for('home'))
 
 
 route = webapp2.Route
@@ -436,8 +432,8 @@ routes = [
 			handler=VerificationHandler, name='verification'),
 		route('/<type:l>/<lab_id:\d+>',
 			handler=LabHandler, name='lab'),
-		route('/new_lab',
-			handler=NewLabHandler, name='newlab'),
+		route('/new_food',
+			handler=NewFoodHandler, name='newfood'),
 		route('/<type:u>/<name:.+>.<last_name:.+>/<user_id:\d+>',
 			handler=ProfileHandler, name='profile'),
 		route('/delete_lab', DeleteLabHandler),

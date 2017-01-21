@@ -6,7 +6,7 @@ from webapp2_extras import security
 
 
 class User(webapp2_extras.appengine.auth.models.User):
-  mealPlans = ndb.StringProperty(repeated=True)
+  mealPlans = ndb.StringProperty()
   dietType = ndb.StringProperty(required=False)
   # Error is made as required, for now
   weightInLb = ndb.FloatProperty()
@@ -53,7 +53,7 @@ class User(webapp2_extras.appengine.auth.models.User):
 
 class Lab(ndb.Model):
   name = ndb.StringProperty(required=True)
-  collaborators = ndb.StringProperty(repeated=True)
+  collaborators = ndb.StringProperty()
   owner = ndb.StringProperty(required=True)
   private = ndb.BooleanProperty()
   
@@ -78,8 +78,7 @@ class Lab(ndb.Model):
 # based on your weight, and diet type
 
 class MealPlan(ndb.Model):
-    mealPlan = ReferenceProperty(User, collection_name='meal_plans')
-    meals = ndb.StringProperty(repeated=True)
+    # user = db.ReferenceProperty(User, collection_name='meal_plans')
     title = ndb.StringProperty(required=True)
     calories = ndb.FloatProperty(required=True)
     protein = ndb.FloatProperty(required=True)
@@ -90,8 +89,7 @@ class MealPlan(ndb.Model):
     fatTarget = ndb.FloatProperty(required=True)
 
 class Meal(ndb.Model):
-    mealPlan = ReferenceProperty(MealPlan, collection_name='meals')
-    foods = ndb.StringProperty(repeated=True)
+    # mealPlan = db.ReferenceProperty(MealPlan, collection_name='meals')
     title = ndb.StringProperty(required=True)
     calories = ndb.FloatProperty(required=True)
     protein = ndb.FloatProperty(required=True)
@@ -100,8 +98,8 @@ class Meal(ndb.Model):
 
 
 class Food(ndb.Model):
-    meal = ndb.ReferenceProperty(Meal, collection_name='foods')
-    title = ndb.StringProperty(required=True, repeated=False)
+    # meal = db.ReferenceProperty(Meal, collection_name='foods')
+    title = ndb.StringProperty(required=True)
     calories = ndb.FloatProperty(required=True)
     protein = ndb.FloatProperty(required=True)
     carbs = ndb.FloatProperty(required=True)

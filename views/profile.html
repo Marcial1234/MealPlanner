@@ -19,7 +19,14 @@
 		</h2>
 		<br/>
 		<br/>
-		{% block foodform %}{% endblock %}
+		<!-- new meal button! -->
+		{% if meals %}
+		{% for meal in meals %}
+			<!-- have a  -->
+			<!-- have this hidden unless a '+' is clicked -->
+			{% block foodform %}{% endblock %}
+		{% endfor %}
+		{% endif %}
 	</div>
 
 	<script type="text/javascript">

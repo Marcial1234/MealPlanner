@@ -258,6 +258,7 @@ class LoginHandler(BaseHandler):
 
 	def post(self):
 		email = self.request.get('email')
+		# need to hash this thou
 		password = self.request.get('password')
 		try:
 			u = self.auth.get_user_by_password(email, password, remember=True,
@@ -389,7 +390,7 @@ class UserPreferenceHandler(BaseHandler):
 # TO PUT EACH ON A DIFFERENT PAGE, OR NOT. MAYBE, MAYBE NOT.
 class NewMealPlanHandler(BaseHandler):
 	def post(self):
-		title = self.request.get('title')
+		name = self.request.get('name')
 
 	def get(self):
 		# need to get the database name first, then get the array 
@@ -403,14 +404,14 @@ class NewMealPlanHandler(BaseHandler):
 		carbsTarget = user.weightInLb * carbRatio
 		fatTarget = user.weightInLb * fatRatio
 
-		mealPlan = MealPlan(title=title, calories=calories, 
+		mealPlan = MealPlan(name=name, calories=calories, 
 			protien=protein, carbs=carbs, fat=fat, proteinTarget='proteinTarget', 
 			carbsTarget='carbsTarget', fatTarget='fatTarget')
 		mealPlan.put()
 
 class NewMealHandler(BaseHandler):
 	def post(self):
-		title = self.request.get('title')
+		name = self.request.get('name')
 	
 	def get(self):
 		# need to get all to get the dropdown to select all
@@ -421,7 +422,7 @@ class NewMealHandler(BaseHandler):
 		carbs = sum(foods.carbs)
 		fat = sum(foods.fat)
 
-		meal = Meal(title=title, calories=calories, 
+		meal = Meal(name=name, calories=calories, 
 			protien=protein, carbs=carbs, fat=fat)
 		meal.put()
 
@@ -431,7 +432,7 @@ class NewFoodHandler(BaseHandler):
 		self.render_template('food_form', params)
 
 	def post(self):
-		title = str(self.request.get('title'))
+		name = str(self.request.get('name'))
 		amount = float(self.request.get('amount'))
 
 		# all food content will be based on 1 OZ of weight
@@ -441,13 +442,12 @@ class NewFoodHandler(BaseHandler):
 		carbs = float(self.request.get('carbs'))*scalar
 		fat = float(self.request.get('fat'))*scalar
 
-		food = Food(title=title, calories=calories, 
+		food = Food(name=name, calories=calories, 
 			protein=protein, carbs=carbs, fat=fat)
 		food.put()
 
 		time.sleep(0.1)
 		self.redirect(self.uri_for('home'))
-
 
 
 routes = [

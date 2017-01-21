@@ -23,13 +23,14 @@
 			<div class="container">
 				<a class="navbar-brand" href="/">Meal Planner</a>
 				<div class="navbar-form navbar-right">
-					<a href="https://docs.google.com/forms/d/1HAXcTNCJ9Asm76Hcj8EpsM1MwBUKSK2eGjOP9mXX9gM/viewform?usp=send_form"><button class="btn btn-primary">Feedback</button></a>
 					{% if not user %}
 						<a href="/login"><button class="btn btn-primary">Login</button></a>
 					{% else %}
 						<!-- CHANGE THIS ICONS LATER -->
-						<a href="{{ user.profile_link() }}"><button class="btn btn-default"><i class="fa fa-home"></i> Profile</button></a>
-						<a href="/logout"><button class="btn btn-danger">Logout</button></a> 
+						<a href="/preferences"><button class="btn btn-default"><i class="fa fa-cog"></i></button></a>
+						<a href="{{ user.profile_link() }}"><button class="btn btn-default"><i class="fa fa-home"></i></button></a>
+						<!-- find a log oug favicon -->
+						<a href="/logout"><button class="btn btn-danger fa fa-power-off"></button></a>
 					{% endif %}
 				</div>
 			</div>

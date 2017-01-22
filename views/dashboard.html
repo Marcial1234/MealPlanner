@@ -12,16 +12,16 @@
 		.clear { clear: both; height: 3px; display: table-caption; }
 	</style>
 
-	<div class="container" style="width: 85%">
+	<div class="container" style="width: 85%; margin-bottom: 3%;">
 		<div class="col-md-12">
 			<div class="col-md-9"></div>
 			<div class="col-md-3">
-			<h2 text-right">
+			<h3 text-right">
 				{{local_user.name}} {{local_user.last_name}}
-			</h2>
+			</h3>
 			</div>
 		</div>
-
+		<br/>
 		<br/>
 		<!-- new meal PLANS button! -->
 		<div class="col-md-10">
@@ -43,10 +43,19 @@
 
 		<div style="clear:both;"></div>
 
+		<h1 class="text-center">Meal Dashboard</h1>
+
 		{% if mealplans %} 
 		<br />
 		<br />
-		<div class="clear col-md-12">
+		<div style="clear:both;"></div>
+
+		{% for mealplan in mealplans %}
+		<br />
+		<br />
+		<!-- add styling later -->
+		<div class="clear col-md-12" >
+			<!-- TURN INTO TABLE -->
 			<div class="col-md-3">&nbsp;</div>
 			<div class="col-md-1">Amount</div>
 			<div class="col-md-2">Calories</div>
@@ -54,14 +63,10 @@
 			<div class="col-md-2">Carbs</div>
 			<div class="col-md-2">Fat</div>
 		</div>
-		<br />
-		<!-- <div class="col-md-1">&nbsp;</div> -->
-
-		{% for mealplan in mealplans %}
-		<!-- add styling later -->
+		<div style="clear:both;"></div>
 		<div class="col-md-12">
 			<div class="col-md-1">&nbsp;</div>
-			<h2 style="font-weight: bold;">{{mealplan.name}}</h2>
+			<h3 style="font-weight: bold;">{{mealplan.name}}</h3>
 		</div>
 <!-- 		<div class="col-md-12">
 			<div class="col-md-1">&nbsp;</div>
@@ -106,7 +111,6 @@
 							<option value="{{f.name}}+{{f.key.id()}}">
 						{% endfor %}
 					</datalist>
-
 					<!-- need some dynamic shit here -->
 					<button class="btn btn-primary" type="submit">OK</button>
 				</form>
@@ -118,8 +122,14 @@
 		{% if food %}
 		<div class="col-md-12">
 			<div class="col-md-2">&nbsp;</div>
-			<div class="col-md-10">{{food.name}}</div>
+			<div class="col-md-1">{{food.name}}</div>
+			<div class="col-md-1"> <input type=number min=1 value=1> </div>
+			<div class="col-md-2">{{food.calories}}</div>
+			<div class="col-md-2">{{food.protein}}</div>
+			<div class="col-md-2">{{food.carbs}}</div>
+			<div class="col-md-2">{{food.fat}}</div>
 		</div>
+		<div style="clear:both;"></div>
 		
 		<!-- figure out the delete -->
 
@@ -136,13 +146,16 @@
 		{% endif %}
 		{% endfor %}
 
+		<div class="col-md-12">&nbsp;</div>
+		<div style="clear:both;"></div>
+
 		<div class="col-md-12">
 			<div class="col-md-4">Target</div>
 			{% for atr in local_user.getPreferences() %}
-			<div class="col-md-1">{{atr}}</div>
+			<div class="col-md-2">{{atr}}</div>
 			{% endfor %}
 		</div>
-
+		<br />
 
 		{% endfor %}
 		{% endif %}

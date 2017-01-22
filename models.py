@@ -31,7 +31,7 @@ class User(webapp2_extras.appengine.auth.models.User):
   def set_password(self, raw_password):
     self.password = security.generate_password_hash(raw_password, length=12)
 
-  def profile_link(self):
+  def dashboard_link(self):
     return "/u/{0}.{1}/{2}".format(self.name, self.last_name, self.key.id())
 
   @classmethod

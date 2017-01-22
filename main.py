@@ -119,7 +119,7 @@ class NotFoundHandler(BaseHandler):
 class MainHandler(BaseHandler):
 	def get(self):
 		if self.user:
-			self.redirect(self.user.profile_link())
+			self.redirect(self.user.dashboard_link())
 		else:
 			params = { "splash" : True }
 			self.render_template('login', params)
@@ -252,7 +252,7 @@ class SetPasswordHandler(BaseHandler):
 class LoginHandler(BaseHandler):
 	def get(self):
 		if self.user:
-			self.redirect(self.user.profile_link())
+			self.redirect(self.user.dashboard_link())
 		else:
 			self.serve_page()
 
@@ -283,7 +283,7 @@ class LogoutHandler(BaseHandler):
 
 # End Authentication/User [Creation/Deletion]
 
-class ProfileHandler(BaseHandler):
+class dashboardHandler(BaseHandler):
 	@user_required
 	def get(self, *args, **kwargs):
 		user_id = int(kwargs['user_id'])
@@ -316,9 +316,9 @@ class ProfileHandler(BaseHandler):
 				'foodNames': Food.query().fetch()
 				}
 				# meal plans GO HERE
-				self.render_template('profile', params)
+				self.render_template('dashboard', params)
 			else:
-				self.display_message('The user who\'s profile you attempted to view does not exist. <a href="/u/{0}.{1}/{2}">Go to your profile.</a>'.format(user.name, user.last_name, user.key.id()))
+				self.display_message('The user who\'s dashboard you attempted to view does not exist. <a href="/u/{0}.{1}/{2}">Go to your dashboard.</a>'.format(user.name, user.last_name, user.key.id()))
 		else:
 			self.redirect(self.uri_for('home'))
 
@@ -419,13 +419,19 @@ class AddFoodHandler(BaseHandler):
 		time.sleep(0.1)
 		self.redirect(self.uri_for('home'))	
 
+# should work
+class DeleteMealPlanHandler(BaseHandler):
+	def post(self):
+		key = self.request.get("key")
+		plan = MealPlan.get_by_id(key)
+		plan.key.delete()
 
 routes = [
 		route('/', MainHandler, name='home'),
 		route('/signup', SignupHandler),
 		route('/<type:v|p>/<user_id:\d+>-<signup_token:.+>',
 			handler=VerificationHandler, name='verification'),
-		route("/profile", MainHandler),
+		route("/dashboard", MainHandler),
 		route('/password', SetPasswordHandler),
 		route('/login', LoginHandler, name='login'),
 		route('/logout', LogoutHandler, name='logout'),
@@ -435,7 +441,7 @@ routes = [
 		route('/new_meal', handler=NewMealHandler, name='newfood'),
 		route('/new_mealplan', handler=NewMealPlanHandler, name='newfood'),
 		route('/preferences', handler=UserPreferenceHandler, name='preferences'),
-		route('/<type:u>/<name:.+>.<last_name:.+>/<user_id:\d+>', handler=ProfileHandler, name='profile'),
+		route('/<type:u>/<name:.+>.<last_name:.+>/<user_id:\d+>', handler=dashboardHandler, name='dashboard'),
 		route("/.*", NotFoundHandler),
 ]
 

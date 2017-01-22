@@ -29,7 +29,7 @@
 		<div class="col-md-2">
 			<div id="newMealPlan" class="col-md-10 panel-collapse collapse" style="max-height: 22px">
 				<form action="/new_mealplan" method="post">
-					<input name="name" placeholder="Meal Plan Name" required class="btn">
+					<input name="name" placeholder="Meal Plan Name" required class="btn" style="max-height: 22px">
 					<input type="hidden" name="user" value={{user_id}}>
 					<button type="submit" class="hide"></button>
 				</form>
@@ -67,7 +67,7 @@
 			<div class="col-md-2 text-center">Carbs</div>
 			<div class="col-md-2 text-center">Fat</div>
 			<div class="pull-right" style="margin-top: -20px;">
-				<form action="/delete_meal" method="post" style="margin-top: 20px">
+				<form action="/delete_mealplan" method="post" style="margin-top: 20px">
 				<input type="hidden" name="id" value="{{mealplan.key.id()}}">
 				<button class="btn btn-danger btn-sm" type="submit">Delete</button>
 				</form>
@@ -82,7 +82,7 @@
 				<div class="col-md-9">&nbsp;</div>
 				<form action="/new_meal" method="post">
 					<input type="hidden" name="plan" value={{mealplan.key.id()}}>
-					<input name="name" placeholder="Meal Name" required class="btn">
+					<input name="name" placeholder="Meal Name" required class="btn" style="max-height: 22px">
 					<button class="hide" type="submit"></button>
 				</form>
 			</div>
@@ -105,17 +105,17 @@
 			<div class="col-md-1">&nbsp;</div>
 			<button class="col-md-1 btn btn-default btn-xs" data-toggle="collapse" data-target="#{{meal.key.id()}}">
 			New Food</button>
-			<div id="{{meal.key.id()}}" class="col-md-10 panel-collapse collapse" style="max-height: 22px">
-				<form action="/add_food" method="post" class="pull-left">
-					<input type="hidden" name="meal" value={{meal.key.id()}}>
-					<input name="food" placeholder="Choose Food" required class="btn" autocomplete="off" list="foodNames">
+			<div id="{{meal.key.id()}}" class="col-md-10 panel-collapse collapse" >
+				<form action="/add_food" method="post" class="pull-left" style="max-height: 22px; margin: 0px 0px;">
+					<input type="hidden" name="meal" value={{meal.key.id()}} >
+					<input name="food" placeholder="Choose Food" required class="btn" autocomplete="off" list="foodNames" style="max-height: 22px">
 					<datalist id="foodNames">
 						{% for f in foodNames %}
 							<option value="{{f.name}}+{{f.key.id()}}">
 						{% endfor %}
 					</datalist>
 					<!-- need some dynamic shit here -->
-					<button class="btn btn-primary" type="submit">OK</button>
+					<button class="btn btn-xs btn-primary" type="submit">OK</button>
 				</form>
 			</div>
 			<div class="pull-right" style="margin-top: -20px;">

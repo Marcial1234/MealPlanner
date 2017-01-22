@@ -493,7 +493,7 @@ routes = [
 		route('/delete_meal', handler=DeleteMealHandler, name='deletemealplan'),
 		route('/delete_food', handler=DeleteFoodHandler, name='deletemealplan'),
 
-		route('/erase_food', handler=DeleteMealPlanHandler, name='erasemealplan'),
+		route('/erase_food', handler=EraseFoodHandler, name='erasemealplan'),
 
 		route('/new_mealplan', handler=NewMealPlanHandler, name='newfood'),
 		route('/preferences', handler=UserPreferenceHandler, name='preferences'),

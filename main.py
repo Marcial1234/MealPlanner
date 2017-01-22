@@ -15,7 +15,6 @@ route = webapp2.Route
 jinja_environment = jinja2.Environment(loader=
 		jinja2.FileSystemLoader(os.path.dirname(__file__)))
 
-
 def user_required(handler):
 	"""
 		Decorator that checks if there's a user associated with the current session.
@@ -322,6 +321,8 @@ class dashboardHandler(BaseHandler):
 		else:
 			self.redirect(self.uri_for('home'))
 
+# Creation
+
 class UserPreferenceHandler(BaseHandler):
 	def get(self):
 		# use tooltip to deliniate this. cog favicon, screw it
@@ -377,6 +378,12 @@ class NewMealHandler(BaseHandler):
 		meal.put()
 
 		local_plan.meals.append(int(meal.key.id()))
+
+		local_plan.calories += meal.calories
+		local_plan.protein += meal.protein
+		local_plan.carbs += meal.carbs
+		local_plan.fat += meal.fat
+
 		local_plan.put()
 
 		time.sleep(0.1)
@@ -392,18 +399,18 @@ class NewFoodHandler(BaseHandler):
 		amount = float(self.request.get('amount'))
 
 		# all food content will be based on 1 OZ of weight
-		scalar = 1/amount
+		scalar = 1/1
+
 		calories = float(self.request.get('calories'))*scalar
 		protein = float(self.request.get('protein'))*scalar
 		carbs = float(self.request.get('carbs'))*scalar
 		fat = float(self.request.get('fat'))*scalar
 
-		food = Food(name=name, calories=calories, 
+		food = Food(name=name, amount=amount, calories=calories, 
 			protein=protein, carbs=carbs, fat=fat)
 		food.put()
 
 		time.sleep(0.1)
-		self.redirect(self.uri_for('home'))
 		self.redirect(self.uri_for('home'))
 
 class AddFoodHandler(BaseHandler):
@@ -414,17 +421,57 @@ class AddFoodHandler(BaseHandler):
 
 		food = Food.get_by_id(int(food_id))
 		local_meal.foods.append(int(food.key.id()))
+
+		local_meal.calories += food.calories
+		local_meal.protein += food.protein
+		local_meal.carbs += food.carbs
+		local_meal.fat += food.fat
+
 		local_meal.put()
 
 		time.sleep(0.1)
 		self.redirect(self.uri_for('home'))	
 
-# should work
+# Deletion
+
 class DeleteMealPlanHandler(BaseHandler):
 	def post(self):
-		key = self.request.get("key")
+		key = int(self.request.get("id"))
 		plan = MealPlan.get_by_id(key)
 		plan.key.delete()
+
+		time.sleep(0.1)
+		self.redirect(self.uri_for('home'))	
+
+class DeleteMealHandler(BaseHandler):
+	def post(self):
+		key = int(self.request.get("id"))
+		meal = Meal.get_by_id(key)
+		meal.key.delete()
+
+		time.sleep(0.1)
+		self.redirect(self.uri_for('home'))	
+
+class DeleteFoodHandler(BaseHandler):
+	def post(self):
+		key = int(self.request.get("id"))
+		food = Food.get_by_id(key)
+		food.key.delete()
+
+		time.sleep(0.1)
+		self.redirect(self.uri_for('home'))
+
+# how => works, if used
+class EraseFoodHandler(BaseHandler):
+	def post(self):
+		key = int(self.request.get("id"))
+		food = Food.get_by_id(key)
+		food.key.delete()
+
+		time.sleep(0.1)
+		self.redirect(self.uri_for('home'))	
+
+
 
 routes = [
 		route('/', MainHandler, name='home'),
@@ -439,10 +486,17 @@ routes = [
 		route('/new_food', handler=NewFoodHandler, name='newfood'),
 		route('/add_food', handler=AddFoodHandler, name='addfood'),
 		route('/new_meal', handler=NewMealHandler, name='newfood'),
+		route('/delete_mealplan', handler=DeleteMealPlanHandler, name='deletemealplan'),
+		route('/delete_meal', handler=DeleteMealHandler, name='deletemealplan'),
+		route('/delete_food', handler=DeleteFoodHandler, name='deletemealplan'),
+
+		route('/erase_food', handler=DeleteMealPlanHandler, name='erasemealplan'),
+
 		route('/new_mealplan', handler=NewMealPlanHandler, name='newfood'),
 		route('/preferences', handler=UserPreferenceHandler, name='preferences'),
 		route('/<type:u>/<name:.+>.<last_name:.+>/<user_id:\d+>', handler=dashboardHandler, name='dashboard'),
-		route("/.*", NotFoundHandler),
+
+		("/.*", NotFoundHandler),
 ]
 
 app = webapp2.WSGIApplication(routes, debug=True, config=config)

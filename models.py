@@ -4,9 +4,8 @@ import webapp2_extras.appengine.auth.models
 from google.appengine.ext import ndb
 from webapp2_extras import security
 
-
 class User(webapp2_extras.appengine.auth.models.User):
-  mealPlans = ndb.FloatProperty(repeated=True) # this should be by ID
+  mealPlans = ndb.FloatProperty(repeated=True)
   
   weightInLb = ndb.FloatProperty(default=0)
   proteinRatio = ndb.FloatProperty(default=0)
@@ -76,6 +75,16 @@ class MealPlan(ndb.Model):
                 for hope in self.meals
                 if Meal.get_by_id(int(hope)) != None]
 
+    def sum_everything(self):
+        for m in self.meals:
+            meal = Meal.get_by_id(int(m))
+            self.calories += meal.calories
+            self.protein += meal.protein
+            self.carbs += meal.carbs
+            self.fat += meal.fat
+        
+        return [self.calories, self.protein, self.carbs, self.fat]
+
 class Meal(ndb.Model):
     foods = ndb.FloatProperty(repeated=True)
     
@@ -92,7 +101,7 @@ class Meal(ndb.Model):
   
 class Food(ndb.Model):
     name = ndb.StringProperty(required=True)
-    # given food is unique
+    amount = ndb.FloatProperty(required=True)
     calories = ndb.FloatProperty(required=True)
     protein = ndb.FloatProperty(required=True)
     carbs = ndb.FloatProperty(required=True)

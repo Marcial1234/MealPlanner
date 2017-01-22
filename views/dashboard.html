@@ -23,19 +23,21 @@
 		</div>
 		<br/>
 		<br/>
+
 		<!-- new meal PLANS button! -->
-		<div class="col-md-10">
-			<button class="col-md-1 btn btn-default" title="oink" data-toggle="collapse" data-target="#newMealPlan">
-			New Plan</button>
-			<div id="newMealPlan" class="col-md-10 panel-collapse collapse">
-				<form action="/new_mealplan" method="post" class="pull-right">
-					<input name="name" placeholder="Meal Plan Name" required class="btn"	>
+		<button class="col-md-1 btn btn-default" title="oink" data-toggle="collapse" data-target="#newMealPlan">
+		New Plan</button>
+		<div class="col-md-6">&nbsp;</div>
+		<div class="col-md-2">
+			<div id="newMealPlan" class="col-md-10 panel-collapse collapse" style="max-height: 34px">
+				<form action="/new_mealplan" method="post">
+					<input name="name" placeholder="Meal Plan Name" required class="btn">
 					<input type="hidden" name="user" value={{user_id}}>
-					<button class="btn btn-primary" type="submit">OK</button>
+					<button type="submit" class="hide"></button>
 				</form>
 			</div>
-			<div style="clear:both;"></div>
 		</div>
+		<div class="col-md-1">&nbsp;</div>
 		
 		<div class="col-md-2">
 			<a href="\new_food"><button class="btn btn-primary" >Create New Food</button></a>
@@ -47,40 +49,43 @@
 
 		{% if mealplans %} 
 		<br />
-		<br />
 		<div style="clear:both;"></div>
 
 		{% for mealplan in mealplans %}
-		<br />
 		<br />
 		<!-- add styling later -->
 		<div class="clear col-md-12" >
 			<!-- TURN INTO TABLE -->
 			<div class="col-md-3">&nbsp;</div>
+		</div>
+		<div style="clear:both;"></div>
+		<div class="col-md-12">
+			<div class="col-md-1"><h3 style="font-weight: bold;">{{mealplan.name}}</h3></div>
+			<div class="col-md-1">&nbsp;</div>
+			<div class="col-md-1">&nbsp;</div>
 			<div class="col-md-1">Amount</div>
 			<div class="col-md-2">Calories</div>
 			<div class="col-md-2">Protein</div>
 			<div class="col-md-2">Carbs</div>
 			<div class="col-md-2">Fat</div>
+			<div class="pull-right" style="margin-top: -20px;">
+				<form action="/delete_meal" method="post" style="margin-top: 20px">
+				<input type="hidden" name="id" value="{{mealplan.key.id()}}">
+				<button class="btn btn-danger btn-sm" type="submit">Delete</button>
+				</form>
+			</div>
+			<div style="clear:both;"></div>
 		</div>
-		<div style="clear:both;"></div>
-		<div class="col-md-12">
-			<div class="col-md-1">&nbsp;</div>
-			<h3 style="font-weight: bold;">{{mealplan.name}}</h3>
-		</div>
-<!-- 		<div class="col-md-12">
-			<div class="col-md-1">&nbsp;</div>
-			<div class="col-md-11"><bold>{{mealplan.name}}</bold></div>
-		</div>
- -->
+
 		<div class="col-md-12">
 			<button class="col-md-1 btn btn-default" data-toggle="collapse" data-target="#{{mealplan.key.id()}}">
 			New Meal</button>
-			<div id="{{mealplan.key.id()}}" class="col-md-10 panel-collapse collapse">
-				<form action="/new_meal" method="post" class="pull-right">
+			<div id="{{mealplan.key.id()}}" class="col-md-10 panel-collapse collapse" style="max-height: 34px">
+				<div class="col-md-9">&nbsp;</div>
+				<form action="/new_meal" method="post">
 					<input type="hidden" name="plan" value={{mealplan.key.id()}}>
 					<input name="name" placeholder="Meal Name" required class="btn">
-					<button class="btn btn-primary" type="submit">OK</button>
+					<button class="hide" type="submit"></button>
 				</form>
 			</div>
 			<div style="clear:both;"></div>
@@ -102,7 +107,7 @@
 			<div class="col-md-1">&nbsp;</div>
 			<button class="col-md-1 btn btn-default" data-toggle="collapse" data-target="#{{meal.key.id()}}">
 			New Food</button>
-			<div id="{{meal.key.id()}}" class="col-md-10 panel-collapse collapse">
+			<div id="{{meal.key.id()}}" class="col-md-10 panel-collapse collapse" style="max-height: 34px">
 				<form action="/add_food" method="post" class="pull-left">
 					<input type="hidden" name="meal" value={{meal.key.id()}}>
 					<input name="food" placeholder="Choose Food" required class="btn" autocomplete="off" list="foodNames">
@@ -115,6 +120,12 @@
 					<button class="btn btn-primary" type="submit">OK</button>
 				</form>
 			</div>
+			<div class="pull-right" style="margin-top: -20px;">
+				<form action="/delete_meal" method="post" style="margin-top: 20px">
+				<input type="hidden" name="id" value="{{meal.key.id()}}">
+				<button class="btn btn-warning btn-sm" type="submit">Delete</button>
+				</form>
+			</div>
 			<div style="clear:both;"></div>
 		</div>
 
@@ -123,25 +134,26 @@
 		<div class="col-md-12">
 			<div class="col-md-2">&nbsp;</div>
 			<div class="col-md-1">{{food.name}}</div>
-			<div class="col-md-1"> <input type=number min=1 value=1> </div>
+			<!-- <div class="col-md-1"> <input type=number min=1 value=1> </div> -->
+			<div class="col-md-1">{{food.amount}}</div>
 			<div class="col-md-2">{{food.calories}}</div>
 			<div class="col-md-2">{{food.protein}}</div>
 			<div class="col-md-2">{{food.carbs}}</div>
 			<div class="col-md-2">{{food.fat}}</div>
+			<div class="pull-right" style="margin-top: -20px;">
+				<form action="/delete_food" method="post" style="margin-top: 20px">
+				<input type="hidden" name="id" value="{{food.key.id()}}">
+				<button class="close" type="submit"><span>&times;</span></button>
+				</form>
+			</div>
 		</div>
 		<div style="clear:both;"></div>
 		
 		<!-- figure out the delete -->
 
-		<!-- 
-		<form action="/delete_meal" method="post" class="pull-right">
-			<input type="hidden" name="id" value="{{food.key.id()}}">
-			<button class="pull-right" type="submit" class="close"><span>&times;</span></button>
-		</form>
-		 -->
-
 		{% endif %}
 		{% endfor %}
+
 
 		{% endif %}
 		{% endfor %}
@@ -152,6 +164,12 @@
 		<div class="col-md-12">
 			<div class="col-md-4">Target</div>
 			{% for atr in local_user.getPreferences() %}
+			<div class="col-md-2">{{atr}}</div>
+			{% endfor %}
+		</div>
+		<div class="col-md-12">
+			<div class="col-md-4">Total</div>
+			{% for atr in mealplan.sum_everything() %}
 			<div class="col-md-2">{{atr}}</div>
 			{% endfor %}
 		</div>

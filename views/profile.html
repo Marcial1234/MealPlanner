@@ -21,8 +21,8 @@
 		<br/>
 		<!-- new meal PLANS button! -->
 		<div class="col-md-12">
-			<button class="col-md-2 btn btn-default" title="oink" data-toggle="collapse" data-target="#newMealPlan">
-			Create New Meal Plan</button>
+			<button class="col-md-1 btn btn-default" title="oink" data-toggle="collapse" data-target="#newMealPlan">
+			New Plan</button>
 			<div id="newMealPlan" class="col-md-10 panel-collapse collapse">
 				<form action="/new_mealplan" method="post" class="pull-right">
 					<input name="name" placeholder="Meal Plan Name" required class="btn"	>
@@ -35,16 +35,23 @@
 
 		{% if mealplans %} 
 		<!-- This is comming from users... -->
-
-		<!-- degub -->
-		{{mealplans.name}}
-		<!-- degub -->
+		<br />
+		<br />
+		<!-- <div class="col-md-1">&nbsp;</div> -->
 
 		{% for mealplan in mealplans %}
-		<h1>{{mealplan.name}}</h2>
+		<!-- add styling later -->
 		<div class="col-md-12">
-			<button class="col-md-2 btn btn-default" data-toggle="collapse" data-target="#{{mealplan.key.id()}}">
-			Create New Meal</button>
+			<h2 style="font-weight: bold;">{{mealplan.name}}</h2>
+		</div>
+<!-- 		<div class="col-md-12">
+			<div class="col-md-1">&nbsp;</div>
+			<div class="col-md-11"><bold>{{mealplan.name}}</bold></div>
+		</div>
+ -->
+		<div class="col-md-12">
+			<button class="col-md-1 btn btn-default" data-toggle="collapse" data-target="#{{mealplan.key.id()}}">
+			New Meal</button>
 			<div id="{{mealplan.key.id()}}" class="col-md-10 panel-collapse collapse">
 				<form action="/new_meal" method="post" class="pull-right">
 					<input type="hidden" name="plan" value={{mealplan.key.id()}}>
@@ -54,28 +61,23 @@
 			</div>
 			<div style="clear:both;"></div>
 		</div>
+		
+		<br />
+		<br />
 
 		<!-- new meal button! -->
 		<!-- need some dynamic shit here	 -->
 		{% for meal in mealplan.getMeals() %}
-<!-- 		<div class="col-md-12">
-			<button class="col-md-2 btn btn-default" data-toggle="collapse" data-target="#{{meal.key.id()}}">
-			Add New Meal</button>
-			<div id="{{meal.key.id()}}" class="col-md-10 panel-collapse collapse">
-				<form action="/new_meal" method="post" class="pull-left">
-					<input type="hidden" name="plan" value={{meal.key.id()}}>
-					<input name="name" placeholder="Meal Name" required class="btn">
-					<button class="btn btn-primary" type="submit">OK</button>
-				</form>
-			</div>
-			<div style="clear:both;"></div>
-		</div> -->
 		{% if meal %}
-		<h2>{{meal.name}}</h3>
+		<div class="col-md-12">
+			<div class="col-md-1">&nbsp;</div>
+			<div class="col-md-11"><h3>{{meal.name}}</h3></div>
+		</div>
 		<!-- ADD FOOD button! -->
 		<div class="col-md-12">
-			<button class="col-md-2 btn btn-default" data-toggle="collapse" data-target="#{{meal.key.id()}}">
-			Add New Food</button>
+			<div class="col-md-1">&nbsp;</div>
+			<button class="col-md-1 btn btn-default" data-toggle="collapse" data-target="#{{meal.key.id()}}">
+			New Food</button>
 			<div id="{{meal.key.id()}}" class="col-md-10 panel-collapse collapse">
 				<form action="/add_food" method="post" class="pull-left">
 					<input type="hidden" name="plan" value={{meal.key.id()}}>
@@ -88,7 +90,7 @@
 		</div>
 		{% for food in meal.getFoods() %}
 		{% if food %}
-		<h3>{{food.name}}</h4>
+		<h3>{{food.name}}</h3>
 			<!-- figure out the delete -->
 <!-- 			<form action="/delete_meal" method="post" class="pull-right">
 				<input type="hidden" name="id" value="{{food.key.id()}}">

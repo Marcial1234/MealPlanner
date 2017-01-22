@@ -13,23 +13,21 @@
 	</style>
 
 	<div class="container" style="width: 85%; margin-bottom: 3%;">
-		<div class="col-md-12">
+		<div class="text-right col-md-12">
 			<div class="col-md-9"></div>
 			<div class="col-md-3">
-			<h3 text-right">
-				{{local_user.name}} {{local_user.last_name}}
-			</h3>
+			<h3> {{local_user.name}} {{local_user.last_name}} </h3>
 			</div>
 		</div>
 		<br/>
 		<br/>
 
 		<!-- new meal PLANS button! -->
-		<button class="col-md-1 btn btn-default" title="oink" data-toggle="collapse" data-target="#newMealPlan">
+		<button class="col-md-1 btn btn-default" title="oink btn-xs" data-toggle="collapse" data-target="#newMealPlan">
 		New Plan</button>
 		<div class="col-md-6">&nbsp;</div>
 		<div class="col-md-2">
-			<div id="newMealPlan" class="col-md-10 panel-collapse collapse" style="max-height: 34px">
+			<div id="newMealPlan" class="col-md-10 panel-collapse collapse" style="max-height: 22px">
 				<form action="/new_mealplan" method="post">
 					<input name="name" placeholder="Meal Plan Name" required class="btn">
 					<input type="hidden" name="user" value={{user_id}}>
@@ -39,8 +37,8 @@
 		</div>
 		<div class="col-md-1">&nbsp;</div>
 		
-		<div class="col-md-2">
-			<a href="\new_food"><button class="btn btn-primary" >Create New Food</button></a>
+		<div class="col-md-2" style="text-align: right">
+			<a href="\new_food"><button class="btn btn-primary">Create New Food</button></a>
 		</div>
 
 		<div style="clear:both;"></div>
@@ -63,11 +61,11 @@
 			<div class="col-md-1"><h3 style="font-weight: bold;">{{mealplan.name}}</h3></div>
 			<div class="col-md-1">&nbsp;</div>
 			<div class="col-md-1">&nbsp;</div>
-			<div class="col-md-1">Amount</div>
-			<div class="col-md-2">Calories</div>
-			<div class="col-md-2">Protein</div>
-			<div class="col-md-2">Carbs</div>
-			<div class="col-md-2">Fat</div>
+			<div class="col-md-1 text-center">Amount</div>
+			<div class="col-md-2 text-center">Calories</div>
+			<div class="col-md-2 text-center">Protein</div>
+			<div class="col-md-2 text-center">Carbs</div>
+			<div class="col-md-2 text-center">Fat</div>
 			<div class="pull-right" style="margin-top: -20px;">
 				<form action="/delete_meal" method="post" style="margin-top: 20px">
 				<input type="hidden" name="id" value="{{mealplan.key.id()}}">
@@ -78,9 +76,9 @@
 		</div>
 
 		<div class="col-md-12">
-			<button class="col-md-1 btn btn-default" data-toggle="collapse" data-target="#{{mealplan.key.id()}}">
+			<button class="col-md-1 btn btn-default btn-xs" data-toggle="collapse" data-target="#{{mealplan.key.id()}}">
 			New Meal</button>
-			<div id="{{mealplan.key.id()}}" class="col-md-10 panel-collapse collapse" style="max-height: 34px">
+			<div id="{{mealplan.key.id()}}" class="col-md-10 panel-collapse collapse" style="max-height: 22px">
 				<div class="col-md-9">&nbsp;</div>
 				<form action="/new_meal" method="post">
 					<input type="hidden" name="plan" value={{mealplan.key.id()}}>
@@ -105,9 +103,9 @@
 		<!-- ADD FOOD button! -->
 		<div class="col-md-12">
 			<div class="col-md-1">&nbsp;</div>
-			<button class="col-md-1 btn btn-default" data-toggle="collapse" data-target="#{{meal.key.id()}}">
+			<button class="col-md-1 btn btn-default btn-xs" data-toggle="collapse" data-target="#{{meal.key.id()}}">
 			New Food</button>
-			<div id="{{meal.key.id()}}" class="col-md-10 panel-collapse collapse" style="max-height: 34px">
+			<div id="{{meal.key.id()}}" class="col-md-10 panel-collapse collapse" style="max-height: 22px">
 				<form action="/add_food" method="post" class="pull-left">
 					<input type="hidden" name="meal" value={{meal.key.id()}}>
 					<input name="food" placeholder="Choose Food" required class="btn" autocomplete="off" list="foodNames">
@@ -135,14 +133,15 @@
 			<div class="col-md-2">&nbsp;</div>
 			<div class="col-md-1">{{food.name}}</div>
 			<!-- <div class="col-md-1"> <input type=number min=1 value=1> </div> -->
-			<div class="col-md-1">{{food.amount}}</div>
-			<div class="col-md-2">{{food.calories}}</div>
-			<div class="col-md-2">{{food.protein}}</div>
-			<div class="col-md-2">{{food.carbs}}</div>
-			<div class="col-md-2">{{food.fat}}</div>
-			<div class="pull-right" style="margin-top: -20px;">
+			<div class="col-md-1 text-center">{{food.amount}}</div>
+			<div class="col-md-2 text-right">{{food.calories}}</div>
+			<div class="col-md-2 text-right">{{food.protein}}</div>
+			<div class="col-md-2 text-right">{{food.carbs}}</div>
+			<div class="col-md-2 text-right">{{food.fat}}</div>
+			<div class="pull-right" style="margin-top: -40px;">
 				<form action="/delete_food" method="post" style="margin-top: 20px">
 				<input type="hidden" name="id" value="{{food.key.id()}}">
+				<input type="hidden" name="meal" value="{{meal.key.id()}}">
 				<button class="close" type="submit"><span>&times;</span></button>
 				</form>
 			</div>
@@ -162,17 +161,52 @@
 		<div style="clear:both;"></div>
 
 		<div class="col-md-12">
-			<div class="col-md-4">Target</div>
+			<div class="col-md-4 text-center">Total</div>
+			{% for atr in mealplan.sum_everything() %}
+			<div class="col-md-2 text-right">{{atr}}</div>
+			{% endfor %}
+		</div>		
+		<div class="col-md-12">
+			<div class="col-md-4 text-center">Target</div>
 			{% for atr in local_user.getPreferences() %}
-			<div class="col-md-2">{{atr}}</div>
+			<div class="col-md-2 text-right">{{atr}}</div>
 			{% endfor %}
 		</div>
 		<div class="col-md-12">
-			<div class="col-md-4">Total</div>
-			{% for atr in mealplan.sum_everything() %}
-			<div class="col-md-2">{{atr}}</div>
-			{% endfor %}
+			<div class="col-md-4 text-center">Net Target</div>
+			<div class="col-md-2 text-right">
+			{% if local_user.caloriesTarget - mealplan.calories > 0 %}
+				{{local_user.caloriesTarget - mealplan.calories }}
+			{% else %}
+				{{ (local_user.caloriesTarget - mealplan.calories)*-1  }}
+			{% endif %}
+			</div>
+			<div class="col-md-2 text-right">
+			{% if local_user.proteinTarget - mealplan.protein > 0 %}
+				{{local_user.proteinTarget - mealplan.protein }}
+			{% else %}
+				{{ (local_user.proteinTarget - mealplan.protein)*-1  }}
+			{% endif %}
+			</div>
+			<div class="col-md-2 text-right">
+			{% if local_user.carbsTarget - mealplan.carbs > 0 %}
+				{{local_user.carbsTarget - mealplan.carbs }}
+			{% else %}
+				{{ (local_user.carbsTarget - mealplan.carbs)*-1  }}
+			{% endif %}
+			</div>
+			<div class="col-md-2 text-right">
+			{% if local_user.fatTarget - mealplan.fat > 0 %}
+				{{local_user.fatTarget - mealplan.fat }}
+			{% else %}
+				{{ (local_user.fatTarget - mealplan.fat)*-1  }}
+			{% endif %}
+			</div>
 		</div>
+		<br />
+		<br />
+		<br />
+		<br />	
 		<br />
 
 		{% endfor %}

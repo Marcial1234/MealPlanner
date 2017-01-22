@@ -455,8 +455,11 @@ class DeleteMealHandler(BaseHandler):
 class DeleteFoodHandler(BaseHandler):
 	def post(self):
 		key = int(self.request.get("id"))
-		food = Food.get_by_id(key)
-		food.key.delete()
+		meal_id = int(self.request.get("meal"))
+
+		meal = Meal.get_by_id(meal_id)
+		meal.foods.remove(key)
+		meal.put()
 
 		time.sleep(0.1)
 		self.redirect(self.uri_for('home'))

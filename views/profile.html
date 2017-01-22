@@ -118,6 +118,14 @@
 		{% endif %}
 		{% endfor %}
 
+		<div class="col-md-12">
+			<div class="col-md-4">Target</div>
+			{% for atr in local_user.getPreferences() %}
+			<div class="col-md-1">{{atr}}</div>
+			{% endfor %}
+		</div>
+
+
 		{% endfor %}
 		{% endif %}
 	</div>

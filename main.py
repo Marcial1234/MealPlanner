@@ -294,6 +294,18 @@ class ProfileHandler(BaseHandler):
 		last_name = kwargs['last_name'].lower()
 
 		local_user = User.get_by_id(user_id)
+		if len(local_user.mealPlans) != 0:
+			mealplans = [MealPlan.get_by_id(int(hope)) 
+						for hope in local_user.mealPlans
+						if MealPlan.get_by_id(int(hope)) != None]
+
+			# fuck it, ship it
+
+			# categorize each meal per plan
+		else:
+			mealplans = None
+			# meals = None
+		
 		user = self.user
 		if request_type == 'u':
 			if local_user and local_user.name.lower() == name and local_user.key.id() == user_id:
@@ -303,9 +315,11 @@ class ProfileHandler(BaseHandler):
 				else:
 					labs = query.filter(Lab.collaborators.IN([local_user.email_address, user.email_address]) and Lab.private == False).fetch()
 				params = {
-				'labs': labs,
-				'local_user': local_user,
-				'dashboard': True
+				# 'meals': meals,
+				'user_id': user_id,
+				'dashboard': True,
+				'mealplans': mealplans,
+				'local_user': local_user
 				}
 				# meal plans GO HERE
 				self.render_template('food_form', params)
@@ -386,46 +400,35 @@ class UserPreferenceHandler(BaseHandler):
 		carbRatio = float(self.request.get('carbRatio'))
 		fatRatio = float(self.request.get('fatRation'))
 
-
-# FIGURE OUT GET/POST DIFFERENCE
-# TO PUT EACH ON A DIFFERENT PAGE, OR NOT. MAYBE, MAYBE NOT.
 class NewMealPlanHandler(BaseHandler):
 	def post(self):
+		# a lot of stuff to try. u['user_id'], etc
 		name = self.request.get('name')
+		user_id = int(self.request.get('user'))
+		local_user = User.get_by_id(user_id)
+
 		mealplan = MealPlan(name=name)
 		mealplan.put()
+
+		# this works!
+		local_user.mealPlans.append(int(mealplan.key.id()))
+		local_user.put()
 
 		time.sleep(0.1)
 		self.redirect(self.uri_for('home'))
 
-	def get(self):
-		pass
-		# need to get the database name first, then get the array 
-		# meals = Meal.query()
-		# calories = sum(meals.calories)
-		# protein = sum(meals.protein)
-		# carbs = sum(meals.carbs)
-		# fat = sum(meals.fat)
-
-		# proteinTarget = user.weightInLb * proteinRatio
-		# carbsTarget = user.weightInLb * carbRatio
-		# fatTarget = user.weightInLb * fatRatio
-
-		# 	protien=protein, carbs=carbs, fat=fat, proteinTarget='proteinTarget', 
-		# 	carbsTarget='carbsTarget', fatTarget='fatTarget')
-		# mealPlan.put()
-
 class NewMealHandler(BaseHandler):
-	def get(self):
-		# update when you create a new food!
-		# calculate nutri info
-		pass
-	
 	def post(self):
 		# need to get all to get the dropdown to select all
 		name = self.request.get('name')
+		plan_id = int(self.request.get('plan'))
+		local_plan = MealPlan.get_by_id(plan_id)
+		
 		meal = Meal(name=name)
 		meal.put()
+
+		local_plan.meals.append(int(meal.key.id()))
+		local_plan.put()
 
 		time.sleep(0.1)
 		self.redirect(self.uri_for('home'))
@@ -491,4 +494,4 @@ routes = [
 		("/.*", NotFoundHandler),
 ]
 
-app = webapp2.WSGIApplication(routes, debug=False, config=config)
+app = webapp2.WSGIApplication(routes, debug=True, config=config)

@@ -6,12 +6,16 @@ from webapp2_extras import security
 
 
 class User(webapp2_extras.appengine.auth.models.User):
-  mealPlans = ndb.KeyProperty(kind='MealPlan', repeated=True) # this should be by ID
-  # Error is made as required, for now
+  mealPlans = ndb.FloatProperty(repeated=True) # this should be by ID
+  
+  # Error if required
   weightInLb = ndb.FloatProperty(default=0)
   proteinRatio = ndb.FloatProperty(default=0)
   carbRatio = ndb.FloatProperty(default=0)
   fatRatio = ndb.FloatProperty(default=0)
+
+  # def getMeals(self):
+  #     return [m for m in self.mealPlans]
 
   # SHA1 encryption
   def set_password(self, raw_password):
@@ -51,7 +55,7 @@ class User(webapp2_extras.appengine.auth.models.User):
     return None, None
 
 class Lab(ndb.Model):
-  name = ndb.StringProperty(required=True)
+  name = ndb.FloatProperty(required=True)
   collaborators = ndb.StringProperty()
   owner = ndb.StringProperty(required=True)
   private = ndb.BooleanProperty()
@@ -72,32 +76,45 @@ class Lab(ndb.Model):
         users.append('{0}'.format(collaborator))
     return users
 
-
 # type of diet formulae!
 # based on your weight, and diet type
 
 # get the user id via the form, that's a an additional thing on the database!!!
 class MealPlan(ndb.Model):
+    meals = ndb.FloatProperty(repeated=True)
+
     name = ndb.StringProperty(required=True)
     calories = ndb.FloatProperty(required=True, default=0)
     protein = ndb.FloatProperty(required=True, default=0)
     carbs = ndb.FloatProperty(required=True, default=0)
     fat = ndb.FloatProperty(required=True, default=0)
+
+    # targets
+    caloriesTarget = ndb.FloatProperty(required=True, default=0)
     proteinTarget = ndb.FloatProperty(required=True, default=0)
     carbsTarget = ndb.FloatProperty(required=True, default=0)
     fatTarget = ndb.FloatProperty(required=True, default=0)
+
+    def getMeals(self):
+        return [Meal.get_by_id(int(hope))
+                for hope in self.meals
+                if Meal.get_by_id(int(hope)) != None]
+
 
 class Meal(ndb.Model):
-    meals = ndb.KeyProperty(kind='Meal', repeated=True)
+    foods = ndb.FloatProperty(repeated=True)
+    
     name = ndb.StringProperty(required=True)
     calories = ndb.FloatProperty(required=True, default=0)
     protein = ndb.FloatProperty(required=True, default=0)
     carbs = ndb.FloatProperty(required=True, default=0)
     fat = ndb.FloatProperty(required=True, default=0)
-    proteinTarget = ndb.FloatProperty(required=True, default=0)
-    carbsTarget = ndb.FloatProperty(required=True, default=0)
-    fatTarget = ndb.FloatProperty(required=True, default=0)
 
+    def getFoods(self):
+        return [Food.get_by_id(int(hope))
+                for hope in self.foods
+                if Food.get_by_id(int(hope)) != None]
+  
 class Food(ndb.Model):
     name = ndb.StringProperty(required=True)
     calories = ndb.FloatProperty(required=True, default=0)

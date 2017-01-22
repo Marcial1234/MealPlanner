@@ -13,24 +13,26 @@
 	</style>
 
 	<div>
+		<!-- <h1>{{user}}</h1> -->
+		
 		<h3>User Preferences</h3>
-		<form action="/preference" method="post" data-parsley-validate>
+		<form action="/preferences" method="post" data-parsley-validate>
 			<div class="form-group">
 				<br />
 				<div class="col-sm-2">
 					<input name="dietType" placeholder="Meal Plan Type" required class="form-control" type="text">
 				</div>
 				<div class="col-sm-2">
-					<input name="weightInLb" placeholder="(lb)" required class="form-control" data-parsley-type="number" min="0" step="any">
+					<input name="weightInLb" placeholder="Weight (lb)" required class="form-control" data-parsley-type="number" min="0" step="any">
 				</div>
 				<div class="col-sm-2">
-					<input name="proteinRatio" placeholder="1.2" required class="form-control" data-parsley-type="number" min="0" step="any">
+					<input name="proteinRatio" placeholder="Protein Ratio (e.g., 1.2)" required class="form-control" data-parsley-type="number" min="0" step="any">
 				</div>
 				<div class="col-sm-2">
-					<input name="carbRatio" placeholder="1.0" required class="form-control" data-parsley-type="number" min="0" step="any">
+					<input name="carbRatio" placeholder="Carb Ratio (e.g., 1.0)" required class="form-control" data-parsley-type="number" min="0" step="any">
 				</div>
 				<div class="col-sm-2">
-					<input name="fatRatio" placeholder="0.3" required class="form-control" data-parsley-type="number" min="0" step="any">
+					<input name="fatRatio" placeholder="Fat Ratio (e.g., 0.3)" required class="form-control" data-parsley-type="number" min="0" step="any">
 				</div>
 				<button class="btn btn-primary col-sm-2" type="submit">Update Preferences</button>
 			</div>

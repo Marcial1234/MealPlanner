@@ -6,12 +6,13 @@ from webapp2_extras import security
 
 
 class User(webapp2_extras.appengine.auth.models.User):
-  mealPlans = ndb.KeyProperty(kind='MealPlan', repeated=True) # this should be by ID
+  mealPlans = ndb.KeyProperty(kind='MealPlan', repeated=True)
+  dietType = ndb.StringProperty(required=False)
   # Error is made as required, for now
-  weightInLb = ndb.FloatProperty(default=0)
-  proteinRatio = ndb.FloatProperty(default=0)
-  carbRatio = ndb.FloatProperty(default=0)
-  fatRatio = ndb.FloatProperty(default=0)
+  weightInLb = ndb.FloatProperty()
+  proteinRatio = ndb.FloatProperty()
+  carbRatio = ndb.FloatProperty()
+  fatRatio = ndb.FloatProperty()
 
   # SHA1 encryption
   def set_password(self, raw_password):
@@ -76,31 +77,29 @@ class Lab(ndb.Model):
 # type of diet formulae!
 # based on your weight, and diet type
 
-# get the user id via the form, that's a an additional thing on the database!!!
 class MealPlan(ndb.Model):
-    name = ndb.StringProperty(required=True)
-    calories = ndb.FloatProperty(required=True, default=0)
-    protein = ndb.FloatProperty(required=True, default=0)
-    carbs = ndb.FloatProperty(required=True, default=0)
-    fat = ndb.FloatProperty(required=True, default=0)
-    proteinTarget = ndb.FloatProperty(required=True, default=0)
-    carbsTarget = ndb.FloatProperty(required=True, default=0)
-    fatTarget = ndb.FloatProperty(required=True, default=0)
-
-class Meal(ndb.Model):
     meals = ndb.KeyProperty(kind='Meal', repeated=True)
     name = ndb.StringProperty(required=True)
-    calories = ndb.FloatProperty(required=True, default=0)
-    protein = ndb.FloatProperty(required=True, default=0)
-    carbs = ndb.FloatProperty(required=True, default=0)
-    fat = ndb.FloatProperty(required=True, default=0)
-    proteinTarget = ndb.FloatProperty(required=True, default=0)
-    carbsTarget = ndb.FloatProperty(required=True, default=0)
-    fatTarget = ndb.FloatProperty(required=True, default=0)
+    calories = ndb.FloatProperty(required=True)
+    protein = ndb.FloatProperty(required=True)
+    carbs = ndb.FloatProperty(required=True)
+    fat = ndb.FloatProperty(required=True)
+    proteinTarget = ndb.FloatProperty(required=True)
+    carbsTarget = ndb.FloatProperty(required=True)
+    fatTarget = ndb.FloatProperty(required=True)
+
+class Meal(ndb.Model):
+    foods = ndb.KeyProperty(kind='Food', repeated=True)
+    name = ndb.StringProperty(required=True)
+    calories = ndb.FloatProperty(required=True)
+    protein = ndb.FloatProperty(required=True)
+    carbs = ndb.FloatProperty(required=True)
+    fat = ndb.FloatProperty(required=True)
 
 class Food(ndb.Model):
     name = ndb.StringProperty(required=True)
-    calories = ndb.FloatProperty(required=True, default=0)
-    protein = ndb.FloatProperty(required=True, default=0)
-    carbs = ndb.FloatProperty(required=True, default=0)
-    fat = ndb.FloatProperty(required=True, default=0)
+    calories = ndb.FloatProperty(required=True)
+    protein = ndb.FloatProperty(required=True)
+    carbs = ndb.FloatProperty(required=True)
+    fat = ndb.FloatProperty(required=True)
+

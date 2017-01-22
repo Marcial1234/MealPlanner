@@ -13,6 +13,20 @@ class User(webapp2_extras.appengine.auth.models.User):
   carbRatio = ndb.FloatProperty(default=0)
   fatRatio = ndb.FloatProperty(default=0)
 
+  caloriesTarget = ndb.FloatProperty(required=True, default=0)
+  proteinTarget = ndb.FloatProperty(required=True, default=0)
+  carbsTarget = ndb.FloatProperty(required=True, default=0)
+  fatTarget = ndb.FloatProperty(required=True, default=0)
+  
+  def getPreferences(self):
+    self.proteinTarget = self.weightInLb * self.proteinRatio
+    self.carbsTarget = self.weightInLb * self.carbRatio
+    self.fatTarget =  self.weightInLb * self.fatRatio
+    self.caloriesTarget = self.proteinTarget * 4 + self.carbsTarget * 4 + self.fatTarget * 8
+
+    return [self.caloriesTarget, self.proteinTarget, self.carbsTarget, self.fatTarget ]
+
+
   # SHA1 encryption
   def set_password(self, raw_password):
     self.password = security.generate_password_hash(raw_password, length=12)
@@ -57,16 +71,10 @@ class MealPlan(ndb.Model):
     fat = ndb.FloatProperty(required=True, default=0)
 
     # targets
-    caloriesTarget = ndb.FloatProperty(required=True, default=0)
-    proteinTarget = ndb.FloatProperty(required=True, default=0)
-    carbsTarget = ndb.FloatProperty(required=True, default=0)
-    fatTarget = ndb.FloatProperty(required=True, default=0)
-
     def getMeals(self):
         return [Meal.get_by_id(int(hope))
                 for hope in self.meals
                 if Meal.get_by_id(int(hope)) != None]
-
 
 class Meal(ndb.Model):
     foods = ndb.FloatProperty(repeated=True)

@@ -346,6 +346,8 @@ class UserPreferenceHandler(BaseHandler):
 		local_user.proteinRatio = proteinRatio
 		local_user.carbRatio = carbRatio
 		local_user.fatRatio = fatRatio
+
+		# ok i think
 		local_user.put()
 
 class NewMealPlanHandler(BaseHandler):

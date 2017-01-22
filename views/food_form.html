@@ -1,8 +1,4 @@
-{% if dashboard %}
-	{% extends "views/profile.html" %}
-{% else %}
-	{% extends "views/new_food.html" %}
-{% endif %}
+{% extends "views/new_food.html" %}
 
 {% block foodform %}
 	<div>
@@ -11,7 +7,7 @@
 			<div class="form-group">
 				<br />
 				<div class="col-sm-2">
-					<input name="title" placeholder="Food (e.g., chicken)" required class="form-control" type="text">
+					<input name="name" placeholder="Food (e.g., chicken)" required class="form-control" type="text">
 				</div>
 				<div class="col-sm-2">
 					<input name="amount" placeholder="Amount (oz)" required class="form-control" data-parsley-type="number" min="0" step="any">

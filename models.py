@@ -8,7 +8,6 @@ from webapp2_extras import security
 class User(webapp2_extras.appengine.auth.models.User):
   mealPlans = ndb.FloatProperty(repeated=True) # this should be by ID
   
-  # Error if required
   weightInLb = ndb.FloatProperty(default=0)
   proteinRatio = ndb.FloatProperty(default=0)
   carbRatio = ndb.FloatProperty(default=0)
@@ -20,12 +19,6 @@ class User(webapp2_extras.appengine.auth.models.User):
 
   def profile_link(self):
     return "/u/{0}.{1}/{2}".format(self.name, self.last_name, self.key.id())
-
-  def gravatarize(self):
-    default = ""
-    gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(self.email_address.lower()).hexdigest() + "?"
-    gravatar_url += urllib.urlencode({'d':default, 's':str(200)})
-    return gravatar_url
 
   @classmethod
   def get_by_auth_token(cls, user_id, token, subject='auth'):
@@ -50,28 +43,6 @@ class User(webapp2_extras.appengine.auth.models.User):
         return user, timestamp
 
     return None, None
-
-class Lab(ndb.Model):
-  name = ndb.FloatProperty(required=True)
-  collaborators = ndb.StringProperty()
-  owner = ndb.StringProperty(required=True)
-  private = ndb.BooleanProperty()
-  
-  def destroy_url(self):
-    return '/l/delete?id=%s' % self.key.id()
-  
-  def lab_link(self):
-    return "/l/{0}".format(self.key.id())
-
-  def list_collaborators(self):
-    users = []
-    for collaborator in self.collaborators:
-      user = User.get_by_auth_id(collaborator)
-      if user:
-        users.append(user)
-      else:
-        users.append('{0}'.format(collaborator))
-    return users
 
 # type of diet formulae!
 # based on your weight, and diet type
@@ -113,8 +84,8 @@ class Meal(ndb.Model):
   
 class Food(ndb.Model):
     name = ndb.StringProperty(required=True)
+    # given food is unique
     calories = ndb.FloatProperty(required=True)
     protein = ndb.FloatProperty(required=True)
     carbs = ndb.FloatProperty(required=True)
     fat = ndb.FloatProperty(required=True)
-

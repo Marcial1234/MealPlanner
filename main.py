@@ -4,7 +4,7 @@ from webapp2_extras.auth import InvalidPasswordError, InvalidAuthIdError
 from google.appengine.ext import ndb
 from google.appengine.api import mail
 
-from models import User, Lab, MealPlan, Meal, Food
+from models import User, MealPlan, Meal, Food
 
 import urllib, hashlib, webapp2, logging, jinja2, time, json, yaml, os
 
@@ -281,12 +281,10 @@ class LogoutHandler(BaseHandler):
 		self.auth.unset_session()
 		self.redirect(self.uri_for('home'))
 
-# End Authentication?
+# End Authentication/User [Creation/Deletion]
 
 class ProfileHandler(BaseHandler):
 	@user_required
-	# i need to get these every time i wanna access a users stuff
-	# or just send via magic! keep reading~
 	def get(self, *args, **kwargs):
 		user_id = int(kwargs['user_id'])
 		name = kwargs['name'].lower()
@@ -309,83 +307,20 @@ class ProfileHandler(BaseHandler):
 		user = self.user
 		if request_type == 'u':
 			if local_user and local_user.name.lower() == name and local_user.key.id() == user_id:
-				query = Lab.query()
-				if local_user.key.id() == user.key.id():
-					labs = query.filter(Lab.collaborators.IN([local_user.email_address])).fetch()
-				else:
-					labs = query.filter(Lab.collaborators.IN([local_user.email_address, user.email_address]) and Lab.private == False).fetch()
 				params = {
 				# 'meals': meals,
 				'user_id': user_id,
 				'dashboard': True,
 				'mealplans': mealplans,
-				'local_user': local_user
+				'local_user': local_user,
+				'foodNames': Food.query().fetch()
 				}
 				# meal plans GO HERE
-				self.render_template('food_form', params)
+				self.render_template('profile', params)
 			else:
 				self.display_message('The user who\'s profile you attempted to view does not exist. <a href="/u/{0}.{1}/{2}">Go to your profile.</a>'.format(user.name, user.last_name, user.key.id()))
 		else:
 			self.redirect(self.uri_for('home'))
-
-# Lab Handlers
-
-class NewLabHandler(BaseHandler):
-	@user_required
-	def get(self):
-		self.render_template('new_lab')
-
-	def post(self):
-		name = self.request.get('name')
-		owner = self.request.get('owner')
-		collaborators = self.request.get('emails') + ',' + owner
-		private = self.request.get('private')
-		if private.lower() == 'true':
-			private = True
-		else:
-			private = False
-		
-		lab = Lab(name = name,
-				owner = owner,
-				private = private,
-				collaborators = collaborators.split(","))
-		lab.put()
-
-		time.sleep(0.1)
-		self.redirect(self.uri_for('home'))
-
-class LabHandler(BaseHandler):
-	@user_required
-	def get(self, *args, **kwargs):
-		lab_id = kwargs['lab_id']
-		lab = Lab.get_by_id(int(lab_id))
-		if self.user.email_address in lab.collaborators:
-				if lab:
-					params = {
-						'lab': lab
-					}
-					lab.put()
-					self.render_template('lab', params)
-				else:
-					params = {
-						'lab_id': lab_id
-					}
-					self.display_message('There is no such lab registered under your name. <a href="/new_lab">Create A New Lab</a>')
-		else: 
-			self.redirect(self.uri_for('home'))
-
-class DeleteLabHandler(webapp2.RequestHandler):
-	def post(self):
-		lab_id = int(self.request.get('id'))
-		lab = Lab.get_by_id(lab_id)
-		if lab:
-			lab.key.delete()
-			time.sleep(0.1)
-			self.redirect(self.uri_for('home'))
-		else:
-			self.display_message('There is no lab by this id.')
-
-# End labs
 
 class UserPreferenceHandler(BaseHandler):
 	def get(self):
@@ -432,7 +367,6 @@ class NewMealPlanHandler(BaseHandler):
 
 class NewMealHandler(BaseHandler):
 	def post(self):
-		# need to get all to get the dropdown to select all
 		name = self.request.get('name')
 		plan_id = int(self.request.get('plan'))
 		local_plan = MealPlan.get_by_id(plan_id)
@@ -444,12 +378,11 @@ class NewMealHandler(BaseHandler):
 		local_plan.put()
 
 		time.sleep(0.1)
-		self.redirect(self.uri_for('home'))
-		
+		self.redirect(self.uri_for('home'))	
 
-# CREATION ONLY
 class NewFoodHandler(BaseHandler):
 	def get(self):
+		# LEAVE THIS
 		self.render_template('food_form')
 
 	def post(self):
@@ -469,10 +402,24 @@ class NewFoodHandler(BaseHandler):
 
 		time.sleep(0.1)
 		self.redirect(self.uri_for('home'))
+		self.redirect(self.uri_for('home'))
+
+class AddFoodHandler(BaseHandler):
+	def post(self):
+		name, food_id = str(self.request.get('food')).split("+")
+
+		food = Food.get_by_id(food_id)
+		meal_id = int(self.request.get('meal'))
+
+		local_meal = Meal.get_by_id(meal_id)
+		local_meal.foods.append(int(food.key.id()))
+		local_meal.put()
+
+		time.sleep(0.1)
+		self.redirect(self.uri_for('home'))	
 
 
 routes = [
-		### Do not touch below
 		route('/', MainHandler, name='home'),
 		route('/signup', SignupHandler),
 		route('/<type:v|p>/<user_id:\d+>-<signup_token:.+>',
@@ -482,31 +429,13 @@ routes = [
 		route('/login', LoginHandler, name='login'),
 		route('/logout', LogoutHandler, name='logout'),
 		route('/forgot', ForgotPasswordHandler, name='forgot'),
-		### Do not touch above
-
-		# NEEDS TO Go
-		# route('/<type:l>/<lab_id:\d+>',
-		# 	handler=LabHandler, name='lab'),
-		# route('/delete_lab', DeleteLabHandler),
-
-
-		# this stuff goes here
-		route('/new_food',
-			handler=NewFoodHandler, name='newfood'),
-		route('/new_meal',
-			handler=NewMealHandler, name='newfood'),
-		route('/new_mealplan',
-			handler=NewMealPlanHandler, name='newfood'),
-		route('/preferences',
-			handler=UserPreferenceHandler, name='preferences'),
-
-
-		# understand this regex
-		route('/<type:u>/<name:.+>.<last_name:.+>/<user_id:\d+>',
-			handler=ProfileHandler, name='profile'),
-
-		# LEAVE THIS HERE
-		("/.*", NotFoundHandler),
+		route('/new_food', handler=NewFoodHandler, name='newfood'),
+		route('/add_food', handler=AddFoodHandler, name='addfood'),
+		route('/new_meal', handler=NewMealHandler, name='newfood'),
+		route('/new_mealplan', handler=NewMealPlanHandler, name='newfood'),
+		route('/preferences', handler=UserPreferenceHandler, name='preferences'),
+		route('/<type:u>/<name:.+>.<last_name:.+>/<user_id:\d+>', handler=ProfileHandler, name='profile'),
+		route("/.*", NotFoundHandler),
 ]
 
 app = webapp2.WSGIApplication(routes, debug=True, config=config)

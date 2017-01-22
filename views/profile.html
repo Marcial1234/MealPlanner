@@ -14,7 +14,6 @@
 
 	<div class="container" style="width: 85%">
 		<h2 class="text-right">
-			<span title="Your Gravatar" class="tooltips"><img class="circle gravatar" src="{{local_user.gravatarize()}}"></span>
 			{{local_user.name}} {{local_user.last_name}}
 		</h2>
 		<br/>
@@ -32,9 +31,9 @@
 			</div>
 			<div style="clear:both;"></div>
 		</div>
-					
+		
 		<div class="col-md-2">
-			<a href="\new_food"><button class="btn btn-primary" >Add Food to DB</button></a>
+			<a href="\new_food"><button class="btn btn-primary" >Create New Food</button></a>
 		</div>
 
 		{% if mealplans %} 
@@ -46,6 +45,7 @@
 		{% for mealplan in mealplans %}
 		<!-- add styling later -->
 		<div class="col-md-12">
+			<div class="col-md-1">&nbsp;</div>
 			<h2 style="font-weight: bold;">{{mealplan.name}}</h2>
 		</div>
 <!-- 		<div class="col-md-12">
@@ -84,27 +84,34 @@
 			New Food</button>
 			<div id="{{meal.key.id()}}" class="col-md-10 panel-collapse collapse">
 				<form action="/add_food" method="post" class="pull-left">
-					<input type="hidden" name="plan" value={{meal.key.id()}}>
-					<input name="name" placeholder="Food Name" required class="btn">
+					<input type="hidden" name="meal" value={{meal.key.id()}}>
+
+					<input name="food" placeholder="Choose Food" required class="btn" autocomplete="off" list="foodNames">
+					<datalist id="foodNames">
+						{% for f in foodNames %}
+							<option value="{{f.name}}+{{f.key.id()}}">
+						{% endfor %}
+					</datalist>
+
 					<!-- need some dynamic shit here -->
 					<button class="btn btn-primary" type="submit">OK</button>
 				</form>
 			</div>
 			<div style="clear:both;"></div>
 		</div>
+
 		{% for food in meal.getFoods() %}
 		{% if food %}
 		<h3>{{food.name}}</h3>
-			<!-- figure out the delete -->
-<!-- 			<form action="/delete_meal" method="post" class="pull-right">
-				<input type="hidden" name="id" value="{{food.key.id()}}">
-				<button class="pull-right" type="submit" class="close"><span>&times;</span></button>
-			</form>
- -->
-			{# 
-			<!-- CREATES FOOD -->
-			{% block foodform %}{% endblock %}
-			#}
+		<!-- figure out the delete -->
+
+		<!-- 
+		<form action="/delete_meal" method="post" class="pull-right">
+			<input type="hidden" name="id" value="{{food.key.id()}}">
+			<button class="pull-right" type="submit" class="close"><span>&times;</span></button>
+		</form>
+		 -->
+
 		{% endif %}
 		{% endfor %}
 

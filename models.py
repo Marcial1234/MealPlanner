@@ -57,9 +57,6 @@ class User(webapp2_extras.appengine.auth.models.User):
 
     return None, None
 
-# type of diet formulae!
-# based on your weight, and diet type
-
 class MealPlan(ndb.Model):
     meals = ndb.FloatProperty(repeated=True)
 
@@ -78,14 +75,12 @@ class MealPlan(ndb.Model):
     def sum_everything(self):
         for m in self.meals:
             meal = Meal.get_by_id(int(m))
-            try:
+            
+            if meal != None:
                 self.calories += meal.calories
                 self.protein += meal.protein
                 self.carbs += meal.carbs
                 self.fat += meal.fat
-            except:
-                return [0,0,0,0]
-                
         
         return [self.calories, self.protein, self.carbs, self.fat]
 

@@ -285,13 +285,8 @@ class dashboardHandler(BaseHandler):
 			mealplans = [MealPlan.get_by_id(int(hope)) 
 						for hope in local_user.mealPlans
 						if MealPlan.get_by_id(int(hope)) != None]
-
-			# fuck it, ship it
-
-			# categorize each meal per plan
 		else:
 			mealplans = None
-			# meals = None
 		
 		user = self.user
 		if request_type == 'u':

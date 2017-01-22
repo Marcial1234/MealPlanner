@@ -148,8 +148,6 @@
 		</div>
 		<div style="clear:both;"></div>
 		
-		<!-- figure out the delete -->
-
 		{% endif %}
 		{% endfor %}
 
@@ -175,28 +173,28 @@
 		<div class="col-md-12">
 			<div class="col-md-4 text-center">Net Target</div>
 			<div class="col-md-2 text-right">
-			{% if local_user.caloriesTarget - mealplan.calories > 0 %}
+			{% if local_user.caloriesTarget - mealplan.calories >= 0 %}
 				{{local_user.caloriesTarget - mealplan.calories }}
 			{% else %}
 				{{ (local_user.caloriesTarget - mealplan.calories)*-1  }}
 			{% endif %}
 			</div>
 			<div class="col-md-2 text-right">
-			{% if local_user.proteinTarget - mealplan.protein > 0 %}
+			{% if local_user.proteinTarget - mealplan.protein >= 0 %}
 				{{local_user.proteinTarget - mealplan.protein }}
 			{% else %}
 				{{ (local_user.proteinTarget - mealplan.protein)*-1  }}
 			{% endif %}
 			</div>
 			<div class="col-md-2 text-right">
-			{% if local_user.carbsTarget - mealplan.carbs > 0 %}
+			{% if local_user.carbsTarget - mealplan.carbs >= 0 %}
 				{{local_user.carbsTarget - mealplan.carbs }}
 			{% else %}
 				{{ (local_user.carbsTarget - mealplan.carbs)*-1  }}
 			{% endif %}
 			</div>
 			<div class="col-md-2 text-right">
-			{% if local_user.fatTarget - mealplan.fat > 0 %}
+			{% if local_user.fatTarget - mealplan.fat >= 0 %}
 				{{local_user.fatTarget - mealplan.fat }}
 			{% else %}
 				{{ (local_user.fatTarget - mealplan.fat)*-1  }}

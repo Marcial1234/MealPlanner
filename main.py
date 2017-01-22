@@ -406,12 +406,11 @@ class NewFoodHandler(BaseHandler):
 
 class AddFoodHandler(BaseHandler):
 	def post(self):
-		name, food_id = str(self.request.get('food')).split("+")
-
-		food = Food.get_by_id(food_id)
+		[name, food_id] = str(self.request.get('food')).split("+")
 		meal_id = int(self.request.get('meal'))
-
 		local_meal = Meal.get_by_id(meal_id)
+
+		food = Food.get_by_id(int(food_id))
 		local_meal.foods.append(int(food.key.id()))
 		local_meal.put()
 

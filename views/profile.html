@@ -13,10 +13,15 @@
 	</style>
 
 	<div class="container" style="width: 85%">
-		<h2 class="text-right">
-			{{local_user.name}} {{local_user.last_name}}
-		</h2>
-		<br/>
+		<div class="col-md-12">
+			<div class="col-md-9"></div>
+			<div class="col-md-3">
+			<h2 text-right">
+				{{local_user.name}} {{local_user.last_name}}
+			</h2>
+			</div>
+		</div>
+
 		<br/>
 		<!-- new meal PLANS button! -->
 		<div class="col-md-10">
@@ -36,9 +41,19 @@
 			<a href="\new_food"><button class="btn btn-primary" >Create New Food</button></a>
 		</div>
 
+		<div style="clear:both;"></div>
+
 		{% if mealplans %} 
-		<!-- This is comming from users... -->
 		<br />
+		<br />
+		<div class="clear col-md-12">
+			<div class="col-md-3">&nbsp;</div>
+			<div class="col-md-1">Amount</div>
+			<div class="col-md-2">Calories</div>
+			<div class="col-md-2">Protein</div>
+			<div class="col-md-2">Carbs</div>
+			<div class="col-md-2">Fat</div>
+		</div>
 		<br />
 		<!-- <div class="col-md-1">&nbsp;</div> -->
 
@@ -85,7 +100,6 @@
 			<div id="{{meal.key.id()}}" class="col-md-10 panel-collapse collapse">
 				<form action="/add_food" method="post" class="pull-left">
 					<input type="hidden" name="meal" value={{meal.key.id()}}>
-
 					<input name="food" placeholder="Choose Food" required class="btn" autocomplete="off" list="foodNames">
 					<datalist id="foodNames">
 						{% for f in foodNames %}
@@ -102,7 +116,11 @@
 
 		{% for food in meal.getFoods() %}
 		{% if food %}
-		<h3>{{food.name}}</h3>
+		<div class="col-md-12">
+			<div class="col-md-2">&nbsp;</div>
+			<div class="col-md-10">{{food.name}}</div>
+		</div>
+		
 		<!-- figure out the delete -->
 
 		<!-- 

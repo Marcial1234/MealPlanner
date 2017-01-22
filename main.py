@@ -104,6 +104,14 @@ class BaseHandler(webapp2.RequestHandler):
 	def abort(self):
 		NotFoundHandler(self)
 
+	def send_mail(self, msg, msubject, email):
+		message = mail.EmailMessage(sender="CoLabs Support {0}".format(config['mailers']['emails']),
+                            subject=msubject)
+		message.to = str(email)
+		message.body = str(msg)
+		message.html = str(msg)
+		message.send()
+
 class NotFoundHandler(BaseHandler):
 	def get(self):
 		self.render_template('404')
@@ -143,6 +151,9 @@ class SignupHandler(BaseHandler):
 		verification_url = self.uri_for('verification', type='v', user_id=user_id,
 			signup_token=token, _full=True)
 
+		msg = 'Verify your email address by visiting <a href="{url}">{url}</a>'
+
+		self.send_mail( msg.format(url=verification_url), 'Verify your address', email)
 		self.redirect(self.uri_for('home'))
 
 class ForgotPasswordHandler(BaseHandler):
@@ -164,9 +175,9 @@ class ForgotPasswordHandler(BaseHandler):
 		verification_url = self.uri_for('verification', type='p', user_id=user_id,
 			signup_token=token, _full=True)
 
-		msg = 'Reset your password by visiting <a target="_blank" href="/"'+verification_url+'">here</a>'
-		self.display_message(msg)
-		# self.redirect(self.uri_for('home'))
+		msg = 'Reset your password by visiting <a href="{url}">{url}</a>'
+		self.send_mail(msg.format(url=verification_url), 'Password Reset', email)
+		self.redirect(self.uri_for('home'))
 	
 	def serve_page(self, not_found=False):
 		email = self.request.get('email')
@@ -287,8 +298,13 @@ class ProfileHandler(BaseHandler):
 			mealplans = [MealPlan.get_by_id(int(hope)) 
 						for hope in local_user.mealPlans
 						if MealPlan.get_by_id(int(hope)) != None]
+
+			# fuck it, ship it
+
+			# categorize each meal per plan
 		else:
 			mealplans = None
+			# meals = None
 		
 		user = self.user
 		if request_type == 'u':
@@ -305,6 +321,7 @@ class ProfileHandler(BaseHandler):
 				'mealplans': mealplans,
 				'local_user': local_user
 				}
+				# meal plans GO HERE
 				self.render_template('food_form', params)
 			else:
 				self.display_message('The user who\'s profile you attempted to view does not exist. <a href="/u/{0}.{1}/{2}">Go to your profile.</a>'.format(user.name, user.last_name, user.key.id()))
@@ -413,25 +430,9 @@ class NewMealPlanHandler(BaseHandler):
 		time.sleep(0.1)
 		self.redirect(self.uri_for('home'))
 
-	def get(self):
-		# need to get the database name first, then get the array 
-		meals = Meal.query()
-		calories = sum(meals.calories)
-		protein = sum(meals.protein)
-		carbs = sum(meals.carbs)
-		fat = sum(meals.fat)
-
-		proteinTarget = user.weightInLb * proteinRatio
-		carbsTarget = user.weightInLb * carbRatio
-		fatTarget = user.weightInLb * fatRatio
-
-		mealPlan = MealPlan(name=name, calories=calories, 
-			protien=protein, carbs=carbs, fat=fat, proteinTarget='proteinTarget', 
-			carbsTarget='carbsTarget', fatTarget='fatTarget')
-		mealPlan.put()
-
 class NewMealHandler(BaseHandler):
 	def post(self):
+		# need to get all to get the dropdown to select all
 		name = self.request.get('name')
 		plan_id = int(self.request.get('plan'))
 		local_plan = MealPlan.get_by_id(plan_id)
@@ -444,12 +445,12 @@ class NewMealHandler(BaseHandler):
 
 		time.sleep(0.1)
 		self.redirect(self.uri_for('home'))
+		
 
 # CREATION ONLY
 class NewFoodHandler(BaseHandler):
 	def get(self):
-		params = { 'dashboard': False }
-		self.render_template('food_form', params)
+		self.render_template('food_form')
 
 	def post(self):
 		name = str(self.request.get('name'))
@@ -469,6 +470,7 @@ class NewFoodHandler(BaseHandler):
 		time.sleep(0.1)
 		self.redirect(self.uri_for('home'))
 
+
 routes = [
 		### Do not touch below
 		route('/', MainHandler, name='home'),
@@ -482,16 +484,22 @@ routes = [
 		route('/forgot', ForgotPasswordHandler, name='forgot'),
 		### Do not touch above
 
-		# NEEDS TO GO
+		# NEEDS TO Go
 		# route('/<type:l>/<lab_id:\d+>',
 		# 	handler=LabHandler, name='lab'),
 		# route('/delete_lab', DeleteLabHandler),
 
+
 		# this stuff goes here
 		route('/new_food',
 			handler=NewFoodHandler, name='newfood'),
+		route('/new_meal',
+			handler=NewMealHandler, name='newfood'),
+		route('/new_mealplan',
+			handler=NewMealPlanHandler, name='newfood'),
 		route('/preferences',
 			handler=UserPreferenceHandler, name='preferences'),
+
 
 		# understand this regex
 		route('/<type:u>/<name:.+>.<last_name:.+>/<user_id:\d+>',
@@ -502,3 +510,5 @@ routes = [
 ]
 
 app = webapp2.WSGIApplication(routes, debug=True, config=config)
+
+# you changed na mas preferences

@@ -319,73 +319,16 @@ class ProfileHandler(BaseHandler):
 				'user_id': user_id,
 				'dashboard': True,
 				'mealplans': mealplans,
-				'local_user': local_user
+				'local_user': local_user,
+				'foodNames': Food.query().fetch()
 				}
+
 				# meal plans GO HERE
 				self.render_template('food_form', params)
 			else:
 				self.display_message('The user who\'s profile you attempted to view does not exist. <a href="/u/{0}.{1}/{2}">Go to your profile.</a>'.format(user.name, user.last_name, user.key.id()))
 		else:
 			self.redirect(self.uri_for('home'))
-
-# Lab Handlers
-
-class NewLabHandler(BaseHandler):
-	@user_required
-	def get(self):
-		self.render_template('new_lab')
-
-	def post(self):
-		name = self.request.get('name')
-		owner = self.request.get('owner')
-		collaborators = self.request.get('emails') + ',' + owner
-		private = self.request.get('private')
-		if private.lower() == 'true':
-			private = True
-		else:
-			private = False
-		
-		lab = Lab(name = name,
-				owner = owner,
-				private = private,
-				collaborators = collaborators.split(","))
-		lab.put()
-
-		time.sleep(0.1)
-		self.redirect(self.uri_for('home'))
-
-class LabHandler(BaseHandler):
-	@user_required
-	def get(self, *args, **kwargs):
-		lab_id = kwargs['lab_id']
-		lab = Lab.get_by_id(int(lab_id))
-		if self.user.email_address in lab.collaborators:
-				if lab:
-					params = {
-						'lab': lab
-					}
-					lab.put()
-					self.render_template('lab', params)
-				else:
-					params = {
-						'lab_id': lab_id
-					}
-					self.display_message('There is no such lab registered under your name. <a href="/new_lab">Create A New Lab</a>')
-		else: 
-			self.redirect(self.uri_for('home'))
-
-class DeleteLabHandler(webapp2.RequestHandler):
-	def post(self):
-		lab_id = int(self.request.get('id'))
-		lab = Lab.get_by_id(lab_id)
-		if lab:
-			lab.key.delete()
-			time.sleep(0.1)
-			self.redirect(self.uri_for('home'))
-		else:
-			self.display_message('There is no lab by this id.')
-
-# End labs
 
 class UserPreferenceHandler(BaseHandler):
 	def get(self):

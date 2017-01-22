@@ -14,7 +14,7 @@
 
 	<div class="container" style="width: 85%">
 		<h2 class="text-right">
-			<span title="Your Gravatar" class="tooltips"><img class="circle gravatar" src="{{local_user.gravatarize()}}"></span>
+			<!-- <span title="Your Gravatar" class="tooltips"><img class="circle gravatar" src="{{local_user.gravatarize()}}"></span> -->
 			{{local_user.name}} {{local_user.last_name}}
 		</h2>
 		<br/>
@@ -72,6 +72,7 @@
 		</div> -->
 		{% if meal %}
 		<h2>{{meal.name}}</h3>
+		{{foodNames}}
 		<!-- ADD FOOD button! -->
 		<div class="col-md-12">
 			<button class="col-md-2 btn btn-default" data-toggle="collapse" data-target="#{{meal.key.id()}}">
@@ -79,7 +80,14 @@
 			<div id="{{meal.key.id()}}" class="col-md-10 panel-collapse collapse">
 				<form action="/add_food" method="post" class="pull-left">
 					<input type="hidden" name="plan" value={{meal.key.id()}}>
-					<input name="name" placeholder="Food Name" required class="btn">
+
+					<input name="name" placeholder="Food Name" required class="btn" autocomplete="off" list="foodNames">
+					<datalist id="foodNames">
+						{% for f in foodNames %}
+							<option value="{{f.name}}">{{f.name}}
+						{% endfor %}
+					</datalist>
+
 					<!-- need some dynamic shit here -->
 					<button class="btn btn-primary" type="submit">OK</button>
 				</form>
@@ -89,6 +97,7 @@
 		{% for food in meal.getFoods() %}
 		{% if food %}
 		<h3>{{food.name}}</h4>
+
 			<!-- figure out the delete -->
 <!-- 			<form action="/delete_meal" method="post" class="pull-right">
 				<input type="hidden" name="id" value="{{food.key.id()}}">

@@ -12,9 +12,9 @@
 		.clear { clear: both; height: 3px; display: table-caption; }
 	</style>
 
-	<div>
-		<!-- <h1>{{user}}</h1> -->
-		
+	<div class="container">
+		<br />
+		<br />
 		<h3>User Preferences</h3>
 		<form action="/preferences" method="post" data-parsley-validate>
 			<div class="form-group">
@@ -34,7 +34,7 @@
 				<div class="col-sm-2">
 					<input name="fatRatio" placeholder="Fat Ratio (e.g., 0.3)" required class="form-control" data-parsley-type="number" min="0" step="any">
 				</div>
-				<button class="btn btn-primary col-sm-2" type="submit">Update Preferences</button>
+				<button class="btn btn-success pull-right" type="submit">Update Preferences</button>
 			</div>
 		</form>
 	</div>

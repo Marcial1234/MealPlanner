@@ -1,4 +1,4 @@
-html, body, #intro, #learn, #join, #aboutus, #codingXp {
+html, body, #intro, #learn, #join, #custome {
     height: 100%;
     width: 100%;
 }
@@ -60,21 +60,13 @@ body {
     background: linear-gradient(45deg, #020031 0%,#6d3353 100%);D
 }
 
-#aboutus {
-    padding-top: 50px;
-    text-align: center;
-    position: relative;
-    background: #fff;
-    background-repeat: no-repeat;
-}
-
 #join {
     background: #fff;
     padding-top: 50px;
     text-align: center;
 }
 
-#codingXp {
+#custome {
     background: url('/s/images/coding.gif');
     background-repeat: no-repeat;
     background-size: cover;
@@ -101,10 +93,6 @@ body {
         width: 90%;
         max-width: 365px;
         margin-top: 75vh;
-    }
-
-    #learnPic {
-        display: none;
     }
 
     #learn {

@@ -103,14 +103,6 @@ class BaseHandler(webapp2.RequestHandler):
 	def abort(self):
 		NotFoundHandler(self)
 
-	def send_mail(self, msg, msubject, email):
-		message = mail.EmailMessage(sender="CoLabs Support {0}".format(config['mailers']['emails']),
-                            subject=msubject)
-		message.to = str(email)
-		message.body = str(msg)
-		message.html = str(msg)
-		message.send()
-
 class NotFoundHandler(BaseHandler):
 	def get(self):
 		self.render_template('404')
@@ -152,7 +144,6 @@ class SignupHandler(BaseHandler):
 
 		msg = 'Verify your email address by visiting <a href="{url}">{url}</a>'
 
-		self.send_mail( msg.format(url=verification_url), 'Verify your address', email)
 		self.redirect(self.uri_for('home'))
 
 class ForgotPasswordHandler(BaseHandler):
@@ -175,7 +166,6 @@ class ForgotPasswordHandler(BaseHandler):
 			signup_token=token, _full=True)
 
 		msg = 'Reset your password by visiting <a href="{url}">{url}</a>'
-		self.send_mail(msg.format(url=verification_url), 'Password Reset', email)
 		self.redirect(self.uri_for('home'))
 	
 	def serve_page(self, not_found=False):
@@ -314,10 +304,10 @@ class dashboardHandler(BaseHandler):
 				'local_user': local_user,
 				'foodNames': Food.query().fetch()
 				}
-				# meal plans GO HERE
 				self.render_template('dashboard', params)
 			else:
 				self.display_message('The user who\'s dashboard you attempted to view does not exist. <a href="/u/{0}.{1}/{2}">Go to your dashboard.</a>'.format(user.name, user.last_name, user.key.id()))
+				time.sleep(1)
 		else:
 			self.redirect(self.uri_for('home'))
 

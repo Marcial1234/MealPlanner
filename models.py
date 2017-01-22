@@ -78,10 +78,14 @@ class MealPlan(ndb.Model):
     def sum_everything(self):
         for m in self.meals:
             meal = Meal.get_by_id(int(m))
-            self.calories += meal.calories
-            self.protein += meal.protein
-            self.carbs += meal.carbs
-            self.fat += meal.fat
+            try:
+                self.calories += meal.calories
+                self.protein += meal.protein
+                self.carbs += meal.carbs
+                self.fat += meal.fat
+            except:
+                return [0,0,0,0]
+                
         
         return [self.calories, self.protein, self.carbs, self.fat]
 

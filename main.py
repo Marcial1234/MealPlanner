@@ -104,14 +104,6 @@ class BaseHandler(webapp2.RequestHandler):
 	def abort(self):
 		NotFoundHandler(self)
 
-	def send_mail(self, msg, msubject, email):
-		message = mail.EmailMessage(sender="CoLabs Support {0}".format(config['mailers']['emails']),
-                            subject=msubject)
-		message.to = str(email)
-		message.body = str(msg)
-		message.html = str(msg)
-		message.send()
-
 class NotFoundHandler(BaseHandler):
 	def get(self):
 		self.render_template('404')
@@ -151,9 +143,6 @@ class SignupHandler(BaseHandler):
 		verification_url = self.uri_for('verification', type='v', user_id=user_id,
 			signup_token=token, _full=True)
 
-		msg = 'Verify your email address by visiting <a href="{url}">{url}</a>'
-
-		self.send_mail( msg.format(url=verification_url), 'Verify your address', email)
 		self.redirect(self.uri_for('home'))
 
 class ForgotPasswordHandler(BaseHandler):
@@ -175,9 +164,9 @@ class ForgotPasswordHandler(BaseHandler):
 		verification_url = self.uri_for('verification', type='p', user_id=user_id,
 			signup_token=token, _full=True)
 
-		msg = 'Reset your password by visiting <a href="{url}">{url}</a>'
-		self.send_mail(msg.format(url=verification_url), 'Password Reset', email)
-		self.redirect(self.uri_for('home'))
+		msg = 'Reset your password by visiting <a target="_blank" href="/{url}">here</a>'
+		self.display_message(msg)
+		# self.redirect(self.uri_for('home'))
 	
 	def serve_page(self, not_found=False):
 		email = self.request.get('email')

@@ -164,7 +164,7 @@ class ForgotPasswordHandler(BaseHandler):
 		verification_url = self.uri_for('verification', type='p', user_id=user_id,
 			signup_token=token, _full=True)
 
-		msg = 'Reset your password by visiting <a target="_blank" href="/{url}">here</a>'
+		msg = 'Reset your password by visiting <a target="_blank" href="/"'+verification_url+'">here</a>'
 		self.display_message(msg)
 		# self.redirect(self.uri_for('home'))
 	
@@ -287,13 +287,8 @@ class ProfileHandler(BaseHandler):
 			mealplans = [MealPlan.get_by_id(int(hope)) 
 						for hope in local_user.mealPlans
 						if MealPlan.get_by_id(int(hope)) != None]
-
-			# fuck it, ship it
-
-			# categorize each meal per plan
 		else:
 			mealplans = None
-			# meals = None
 		
 		user = self.user
 		if request_type == 'u':

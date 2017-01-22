@@ -321,7 +321,6 @@ class ProfileHandler(BaseHandler):
 				'mealplans': mealplans,
 				'local_user': local_user
 				}
-				# meal plans GO HERE
 				self.render_template('food_form', params)
 			else:
 				self.display_message('The user who\'s profile you attempted to view does not exist. <a href="/u/{0}.{1}/{2}">Go to your profile.</a>'.format(user.name, user.last_name, user.key.id()))
@@ -391,14 +390,27 @@ class UserPreferenceHandler(BaseHandler):
 	def get(self):
 		# use tooltip to deliniate this. cog favicon, screw it
 		# go to main to change this, it's commented there already
-		self.render_template("preferences")
+		params = {'user': self.user}
+		self.render_template("preferences",params)
 
 	def post(self):
+		time.sleep(0.1)
+		self.redirect(self.uri_for('home'))
 		dietType = str(self.request.get('dietType'))
-		weigthInLb = float(self.request.get('weightInLb'))
+		weightInLb = float(self.request.get('weightInLb'))
 		proteinRatio = float(self.request.get('proteinRatio'))
 		carbRatio = float(self.request.get('carbRatio'))
-		fatRatio = float(self.request.get('fatRation'))
+		fatRatio = float(self.request.get('fatRatio'))
+
+		PUTO_USER_ID = self.user.key.id()
+		local_user = User.get_by_id(PUTO_USER_ID)
+
+		local_user.dietType = dietType 
+		local_user.weightInLb = weightInLb
+		local_user.proteinRatio = proteinRatio
+		local_user.carbRatio = carbRatio
+		local_user.fatRatio = fatRatio
+		local_user.put()
 
 class NewMealPlanHandler(BaseHandler):
 	def post(self):
@@ -417,9 +429,25 @@ class NewMealPlanHandler(BaseHandler):
 		time.sleep(0.1)
 		self.redirect(self.uri_for('home'))
 
+	def get(self):
+		# need to get the database name first, then get the array 
+		meals = Meal.query()
+		calories = sum(meals.calories)
+		protein = sum(meals.protein)
+		carbs = sum(meals.carbs)
+		fat = sum(meals.fat)
+
+		proteinTarget = user.weightInLb * proteinRatio
+		carbsTarget = user.weightInLb * carbRatio
+		fatTarget = user.weightInLb * fatRatio
+
+		mealPlan = MealPlan(name=name, calories=calories, 
+			protien=protein, carbs=carbs, fat=fat, proteinTarget='proteinTarget', 
+			carbsTarget='carbsTarget', fatTarget='fatTarget')
+		mealPlan.put()
+
 class NewMealHandler(BaseHandler):
 	def post(self):
-		# need to get all to get the dropdown to select all
 		name = self.request.get('name')
 		plan_id = int(self.request.get('plan'))
 		local_plan = MealPlan.get_by_id(plan_id)
@@ -432,12 +460,12 @@ class NewMealHandler(BaseHandler):
 
 		time.sleep(0.1)
 		self.redirect(self.uri_for('home'))
-		
 
 # CREATION ONLY
 class NewFoodHandler(BaseHandler):
 	def get(self):
-		self.render_template('food_form')
+		params = { 'dashboard': False }
+		self.render_template('food_form', params)
 
 	def post(self):
 		name = str(self.request.get('name'))
@@ -457,7 +485,6 @@ class NewFoodHandler(BaseHandler):
 		time.sleep(0.1)
 		self.redirect(self.uri_for('home'))
 
-
 routes = [
 		### Do not touch below
 		route('/', MainHandler, name='home'),
@@ -471,20 +498,16 @@ routes = [
 		route('/forgot', ForgotPasswordHandler, name='forgot'),
 		### Do not touch above
 
-		# NEEDS TO Go
+		# NEEDS TO GO
 		# route('/<type:l>/<lab_id:\d+>',
 		# 	handler=LabHandler, name='lab'),
 		# route('/delete_lab', DeleteLabHandler),
 
-
 		# this stuff goes here
 		route('/new_food',
 			handler=NewFoodHandler, name='newfood'),
-		route('/new_meal',
-			handler=NewMealHandler, name='newfood'),
-		route('/new_mealplan',
-			handler=NewMealPlanHandler, name='newfood'),
-
+		route('/preferences',
+			handler=UserPreferenceHandler, name='preferences'),
 
 		# understand this regex
 		route('/<type:u>/<name:.+>.<last_name:.+>/<user_id:\d+>',

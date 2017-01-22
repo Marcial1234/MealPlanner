@@ -14,9 +14,6 @@ class User(webapp2_extras.appengine.auth.models.User):
   carbRatio = ndb.FloatProperty(default=0)
   fatRatio = ndb.FloatProperty(default=0)
 
-  # def getMeals(self):
-  #     return [m for m in self.mealPlans]
-
   # SHA1 encryption
   def set_password(self, raw_password):
     self.password = security.generate_password_hash(raw_password, length=12)
@@ -79,7 +76,6 @@ class Lab(ndb.Model):
 # type of diet formulae!
 # based on your weight, and diet type
 
-# get the user id via the form, that's a an additional thing on the database!!!
 class MealPlan(ndb.Model):
     meals = ndb.FloatProperty(repeated=True)
 
@@ -117,7 +113,8 @@ class Meal(ndb.Model):
   
 class Food(ndb.Model):
     name = ndb.StringProperty(required=True)
-    calories = ndb.FloatProperty(required=True, default=0)
-    protein = ndb.FloatProperty(required=True, default=0)
-    carbs = ndb.FloatProperty(required=True, default=0)
-    fat = ndb.FloatProperty(required=True, default=0)
+    calories = ndb.FloatProperty(required=True)
+    protein = ndb.FloatProperty(required=True)
+    carbs = ndb.FloatProperty(required=True)
+    fat = ndb.FloatProperty(required=True)
+

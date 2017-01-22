@@ -1,0 +1,55 @@
+{% extends "layouts/main.html" %}
+
+{% block maincontent %}
+	<style type="text/css">
+		.rigid { width: 330px; }
+		.box { height: initial }
+		.labs { font-size: large; }
+		.left-indent-sm { margin-left: 10px; }
+		.left-indent-lg { margin-left: 100px; }
+		.close:hover { opacity: 1; color: red; }
+		.right-indent-lg { margin-right: 100px; }
+		.clear { clear: both; height: 3px; display: table-caption; }
+	</style>
+
+	<div class="container">
+		<br />
+		<br />
+		<h3>User Preferences</h3>
+		<p>
+			Your meal plan goal will be calculated using your user preferences.
+		</p>
+		<form action="/preferences" method="post" data-parsley-validate>
+			<div class="form-group">
+				<br />
+				<div class="col-sm-2">
+					<input name="dietType" placeholder="Meal Plan Type" required class="form-control" type="text">
+				</div>
+				<div class="col-sm-2">
+					<input name="weightInLb" placeholder="Weight (lb)" required class="form-control" data-parsley-type="number" min="0" step="any">
+				</div>
+				<div class="col-sm-2">
+					<input name="proteinRatio" placeholder="Protein Ratio (e.g., 1.2)" required class="form-control" data-parsley-type="number" min="0" step="any">
+				</div>
+				<div class="col-sm-2">
+					<input name="carbRatio" placeholder="Carb Ratio (e.g., 1.0)" required class="form-control" data-parsley-type="number" min="0" step="any">
+				</div>
+				<div class="col-sm-2">
+					<input name="fatRatio" placeholder="Fat Ratio (e.g., 0.3)" required class="form-control" data-parsley-type="number" min="0" step="any">
+				</div>
+				<button class="btn btn-success pull-right" type="submit">Update Preferences</button>
+			</div>
+		</form>
+	</div>
+	<div style="clear:both;"></div>
+
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$(".tooltips").tooltip();
+			$(".fa").click(function () {
+				$(this).toggleClass("fa-search-plus").toggleClass("fa-search-minus")
+			});
+		})
+	</script>
+
+{% endblock %}
